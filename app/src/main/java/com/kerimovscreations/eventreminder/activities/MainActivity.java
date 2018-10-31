@@ -1,0 +1,157 @@
+package com.kerimovscreations.eventreminder.activities;
+
+import android.arch.lifecycle.ViewModelProviders;
+import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.kerimovscreations.eventreminder.R;
+import com.kerimovscreations.eventreminder.adapters.EventListRVAdapter;
+import com.kerimovscreations.eventreminder.models.Event;
+import com.kerimovscreations.eventreminder.viewModel.EventViewModel;
+import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.fabAdd)
+    FloatingActionButton mFabAdd;
+    @BindView(R.id.rvEventList)
+    RecyclerView mRVEvents;
+
+    private EventListRVAdapter adapter;
+    private EventViewModel mEventViewModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        initVars();
+    }
+
+    void initVars() {
+        adapter = new EventListRVAdapter(this);
+        adapter.setOnItemClickListener(new EventListRVAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+
+            }
+
+            @Override
+            public void onLongClick(int position) {
+                showDeleteEventDialog(position);
+            }
+        });
+
+        mRVEvents.setAdapter(adapter);
+        mRVEvents.setLayoutManager(new LinearLayoutManager(this));
+
+        mFabAdd.setOnClickListener(view -> {
+            showAddEventSheet();
+        });
+
+        mEventViewModel = ViewModelProviders.of(this).get(EventViewModel.class);
+
+        mEventViewModel.getAllEvents().observe(this, events -> {
+            adapter.setEvents(events);
+        });
+    }
+
+    void showAddEventSheet() {
+        final BottomSheetDialog bs = new BottomSheetDialog(this);
+        View sheet = getLayoutInflater().inflate(R.layout.dialog_event_form, null);
+        bs.setContentView(sheet);
+
+        TextInputEditText editText = sheet.findViewById(R.id.dialog_event_title);
+        TextView dateText = sheet.findViewById(R.id.dialog_event_date_text);
+        final Date[] selectedDate = new Date[1];
+
+        // Initialize
+        SwitchDateTimeDialogFragment dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
+                "Title example",
+                "OK",
+                "Cancel"
+        );
+
+        // Assign values
+        dateTimeDialogFragment.startAtCalendarView();
+        dateTimeDialogFragment.set24HoursMode(true);
+        dateTimeDialogFragment.setMinimumDateTime(new GregorianCalendar().getTime());
+        dateTimeDialogFragment.setDefaultDateTime(new GregorianCalendar().getTime());
+
+        // Define new day and month format
+        try {
+            dateTimeDialogFragment.setSimpleDateMonthAndDayFormat(new SimpleDateFormat("dd MMMM", Locale.getDefault()));
+        } catch (SwitchDateTimeDialogFragment.SimpleDateMonthAndDayFormatException e) {
+            Log.e("MAIN_TAG", e.getMessage());
+        }
+
+        // Set listener
+        dateTimeDialogFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Date date) {
+                DateFormat df = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
+                dateText.setText(df.format(date));
+                selectedDate[0] = date;
+            }
+
+            @Override
+            public void onNegativeButtonClick(Date date) {
+                // Date is get on negative button click
+            }
+        });
+
+        sheet.findViewById(R.id.dialog_event_date_layout).setOnClickListener(view ->
+                dateTimeDialogFragment.show(getSupportFragmentManager(), "dialog_time"));
+
+        sheet.findViewById(R.id.dialog_event_submit_btn).setOnClickListener(v -> {
+            if (selectedDate[0] != null && editText.getText().toString().length() > 0) {
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+
+                Event event = new Event(editText.getText().toString(), df.format(selectedDate[0]));
+                mEventViewModel.insert(event);
+                bs.cancel();
+            } else {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Please, fill all the fields",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
+        bs.setCancelable(true);
+        bs.show();
+    }
+
+    private void showDeleteEventDialog(int position) {
+        final BottomSheetDialog bsh = new BottomSheetDialog(this);
+        View sheetView = getLayoutInflater().inflate(R.layout.dialog_delete_confirm, null);
+        bsh.setContentView(sheetView);
+        bsh.show();
+
+        sheetView.findViewById(R.id.confirm_cancel_sure).setOnClickListener(view -> {
+            mEventViewModel.delete(position);
+            bsh.cancel();
+        });
+        sheetView.findViewById(R.id.confirm_cancel_cancel).setOnClickListener(view -> bsh.cancel());
+    }
+
+}
