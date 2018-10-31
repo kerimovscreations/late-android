@@ -88,7 +88,7 @@ public class EventListRVAdapter extends RecyclerView.Adapter<EventListRVAdapter.
         Event bItem = mList.get(position);
 
         viewHolder.title.setText(bItem.getTitle());
-        viewHolder.date.setText(bItem.getDate());
+        viewHolder.date.setText(bItem.getDateConverted());
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.kerimovscreations.eventreminder.activities;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
@@ -15,16 +18,24 @@ import android.widget.Toast;
 
 import com.kerimovscreations.eventreminder.R;
 import com.kerimovscreations.eventreminder.adapters.EventListRVAdapter;
+import com.kerimovscreations.eventreminder.dialogs.PickerDialogFragment;
 import com.kerimovscreations.eventreminder.models.Event;
 import com.kerimovscreations.eventreminder.viewModel.EventViewModel;
+import com.kerimovscreations.eventreminder.workers.NotifyWorker;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -38,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private EventListRVAdapter adapter;
     private EventViewModel mEventViewModel;
 
+    public static final String workTag = "notificationWork";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +58,14 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initVars();
+
+//        MediaPlayer mp= MediaPlayer.create(getApplicationContext(), R.raw.mins_0_left);
+//        mp.start();
     }
 
     void initVars() {
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Meeting reminder");
+
         adapter = new EventListRVAdapter(this);
         adapter.setOnItemClickListener(new EventListRVAdapter.OnItemClickListener() {
             @Override
@@ -73,6 +91,48 @@ public class MainActivity extends AppCompatActivity {
         mEventViewModel.getAllEvents().observe(this, events -> {
             adapter.setEvents(events);
         });
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Reminders";
+            String description = "Reminders for time periods of meetings";
+            int importance = NotificationManager.IMPORTANCE_MIN;
+            NotificationChannel channel = new NotificationChannel("B", name, importance);
+            channel.setDescription(description);
+
+            channel.enableLights(true);
+            channel.enableVibration(true);
+            channel.setSound(null, null);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
+            if (notificationManager != null) {
+                List<NotificationChannel> channelList = notificationManager.getNotificationChannels();
+
+                for (int i = 0; channelList != null && i < channelList.size(); i++) {
+                    notificationManager.deleteNotificationChannel(channelList.get(i).getId());
+                }
+
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+    }
+
+    int calculateDelay(Event event) {
+        DateFormat out = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+
+        Log.e("ERR33", out.format(new Date()));
+        Log.e("ERR33", out.format(event.getDateObj()));
+
+        int result = (int) ((event.getDateObj().getTime() - (new Date()).getTime()) / 60000);
+
+        Log.e("ERR33", String.valueOf(result));
+
+        if (result < 0) {
+            return 0;
+        } else {
+            return result;
+        }
     }
 
     void showAddEventSheet() {
@@ -82,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
 
         TextInputEditText editText = sheet.findViewById(R.id.dialog_event_title);
         TextView dateText = sheet.findViewById(R.id.dialog_event_date_text);
+        TextView durationText = sheet.findViewById(R.id.dialog_event_duration_text);
         final Date[] selectedDate = new Date[1];
+        final int[] duration_mins = {0};
 
         // Initialize
         SwitchDateTimeDialogFragment dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
@@ -122,12 +184,26 @@ public class MainActivity extends AppCompatActivity {
         sheet.findViewById(R.id.dialog_event_date_layout).setOnClickListener(view ->
                 dateTimeDialogFragment.show(getSupportFragmentManager(), "dialog_time"));
 
+        sheet.findViewById(R.id.dialog_event_duration_layout).setOnClickListener(view -> {
+            PickerDialogFragment dialogFragment = new PickerDialogFragment();
+            dialogFragment.setOnResultListener(duration -> {
+                duration_mins[0] = (int) (duration / 60000);
+                durationText.setText(duration_mins[0] + " minutes");
+            });
+
+            dialogFragment.show(getFragmentManager(), "dialog");
+        });
+
         sheet.findViewById(R.id.dialog_event_submit_btn).setOnClickListener(v -> {
-            if (selectedDate[0] != null && editText.getText().toString().length() > 0) {
+            if (selectedDate[0] != null
+                    && editText.getText().toString().length() > 0
+                    && duration_mins[0] >= 20) {
                 DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
 
-                Event event = new Event(editText.getText().toString(), df.format(selectedDate[0]));
+                Event event = new Event(editText.getText().toString(), df.format(selectedDate[0]), duration_mins[0]);
+                Log.d("ERR12", df.format(selectedDate[0]));
                 mEventViewModel.insert(event);
+                notificationSet(event);
                 bs.cancel();
             } else {
                 Toast.makeText(
@@ -154,4 +230,48 @@ public class MainActivity extends AppCompatActivity {
         sheetView.findViewById(R.id.confirm_cancel_cancel).setOnClickListener(view -> bsh.cancel());
     }
 
+    void notificationSet(Event event) {
+        Data inputData = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 0).build();
+
+        int delayMSeconds = calculateDelay(event);
+        if (delayMSeconds > 0) {
+            OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                    .setInitialDelay(delayMSeconds, TimeUnit.MINUTES)
+                    .setInputData(inputData)
+                    .addTag(workTag)
+                    .build();
+
+            WorkManager.getInstance().enqueue(notificationWork);
+        }
+
+        if (event.getDuration_mins() > 20 && event.getDuration_mins() < 30) {
+
+            Data inputData1 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 20).build();
+
+            int delayMins1 = calculateDelay(event) + event.getDuration_mins() - 20;
+            if (delayMins1 > 0) {
+                OneTimeWorkRequest notificationWork1 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                        .setInitialDelay(delayMins1, TimeUnit.MINUTES)
+                        .setInputData(inputData1)
+                        .addTag(workTag)
+                        .build();
+
+                WorkManager.getInstance().enqueue(notificationWork1);
+            }
+        } else if (event.getDuration_mins() >= 30) {
+            Data inputData2 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 30).build();
+
+            int delayMins2 = calculateDelay(event) + event.getDuration_mins() - 30;
+            if (delayMins2 > 0) {
+                OneTimeWorkRequest notificationWork2 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                        .setInitialDelay(delayMins2, TimeUnit.MINUTES)
+                        .setInputData(inputData2)
+                        .addTag(workTag)
+                        .build();
+
+                WorkManager.getInstance().enqueue(notificationWork2);
+            }
+        }
+    }
 }
+
