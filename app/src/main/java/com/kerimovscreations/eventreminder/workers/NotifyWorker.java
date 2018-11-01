@@ -42,32 +42,40 @@ public class NotifyWorker extends Worker {
         final int milestone = getInputData().getInt("MILESTONE", 0);
 
         Uri sound;
+        String title;
 
         switch (milestone) {
             case 0:
                 sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_0_left);
+                title = "It's time for the next meeting";
                 break;
             case 5:
                 sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_5_left);
+                title = "5 minutes left for the next meeting";
                 break;
             case 10:
                 sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_10_left);
+                title = "10 minutes left for the next meeting";
                 break;
             case 20:
                 sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_20_left);
+                title = "20 minutes left for the next meeting";
                 break;
             case 30:
                 sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_30_left);
+                title = "30 minutes left for the next meeting";
                 break;
             default:
                 sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_0_left);
+                title = "It's time for the next meeting";
+                break;
         }
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "B")
                 .setSmallIcon(R.drawable.ic_event_note_black_24dp)
                 .setSound(null)
                 .setContentTitle("It's time")
-                .setContentText("It's time to complete meeting")
+                .setContentText(title)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setContentIntent(pendingIntent);
 

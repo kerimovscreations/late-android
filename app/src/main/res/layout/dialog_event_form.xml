@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/dialog_event_date_ic"
-                android:text="Select date"
+                android:text="Select time"
                 android:textAlignment="center"
                 android:textColor="@color/colorAccentAlternative"
                 android:textSize="18sp" />
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/dialog_event_duration_ic"
-                android:text="Duration"
+                android:text="Select duration"
                 android:textAlignment="center"
                 android:textColor="@color/colorAccentAlternative"
                 android:textSize="18sp" />

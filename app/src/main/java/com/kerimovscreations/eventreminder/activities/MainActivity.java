@@ -2,12 +2,12 @@ package com.kerimovscreations.eventreminder.activities;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.TimePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,12 +22,11 @@ import com.kerimovscreations.eventreminder.dialogs.PickerDialogFragment;
 import com.kerimovscreations.eventreminder.models.Event;
 import com.kerimovscreations.eventreminder.viewModel.EventViewModel;
 import com.kerimovscreations.eventreminder.workers.NotifyWorker;
-import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Reminders";
             String description = "Reminders for time periods of meetings";
-            int importance = NotificationManager.IMPORTANCE_MIN;
+            int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel channel = new NotificationChannel("B", name, importance);
             channel.setDescription(description);
 
@@ -107,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
 
             if (notificationManager != null) {
-                List<NotificationChannel> channelList = notificationManager.getNotificationChannels();
+//                List<NotificationChannel> channelList = notificationManager.getNotificationChannels();
 
-                for (int i = 0; channelList != null && i < channelList.size(); i++) {
-                    notificationManager.deleteNotificationChannel(channelList.get(i).getId());
-                }
+//                for (int i = 0; channelList != null && i < channelList.size(); i++) {
+//                    notificationManager.deleteNotificationChannel(channelList.get(i).getId());
+//                }
 
                 notificationManager.createNotificationChannel(channel);
             }
@@ -146,43 +145,18 @@ public class MainActivity extends AppCompatActivity {
         final Date[] selectedDate = new Date[1];
         final int[] duration_mins = {0};
 
-        // Initialize
-        SwitchDateTimeDialogFragment dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
-                "Title example",
-                "OK",
-                "Cancel"
-        );
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (timePicker, hours, mins) -> {
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+            now.set(Calendar.HOUR_OF_DAY, hours);
+            now.set(Calendar.MINUTE, mins);
+            selectedDate[0] = now.getTime();
+            dateText.setText(hours + ":" + mins);
+        }, 0, 0, true);
 
-        // Assign values
-        dateTimeDialogFragment.startAtCalendarView();
-        dateTimeDialogFragment.set24HoursMode(true);
-        dateTimeDialogFragment.setMinimumDateTime(new GregorianCalendar().getTime());
-        dateTimeDialogFragment.setDefaultDateTime(new GregorianCalendar().getTime());
-
-        // Define new day and month format
-        try {
-            dateTimeDialogFragment.setSimpleDateMonthAndDayFormat(new SimpleDateFormat("dd MMMM", Locale.getDefault()));
-        } catch (SwitchDateTimeDialogFragment.SimpleDateMonthAndDayFormatException e) {
-            Log.e("MAIN_TAG", e.getMessage());
-        }
-
-        // Set listener
-        dateTimeDialogFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Date date) {
-                DateFormat df = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
-                dateText.setText(df.format(date));
-                selectedDate[0] = date;
-            }
-
-            @Override
-            public void onNegativeButtonClick(Date date) {
-                // Date is get on negative button click
-            }
-        });
 
         sheet.findViewById(R.id.dialog_event_date_layout).setOnClickListener(view ->
-                dateTimeDialogFragment.show(getSupportFragmentManager(), "dialog_time"));
+                timePickerDialog.show());
 
         sheet.findViewById(R.id.dialog_event_duration_layout).setOnClickListener(view -> {
             PickerDialogFragment dialogFragment = new PickerDialogFragment();
@@ -234,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
         // end
         int delayMSeconds = calculateDelay(event) + event.getDuration_mins();
+        Log.e("ERR33", String.valueOf(delayMSeconds));
         if (delayMSeconds > 0) {
             OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                     .setInitialDelay(delayMSeconds, TimeUnit.MINUTES)
@@ -244,11 +219,11 @@ public class MainActivity extends AppCompatActivity {
             WorkManager.getInstance().enqueue(notificationWork);
         }
 
-
         // 5 left
         Data inputData1 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 5).build();
 
         int delayMins1 = calculateDelay(event) + event.getDuration_mins() - 5;
+        Log.e("ERR33", String.valueOf(delayMins1));
         if (delayMins1 > 0) {
             OneTimeWorkRequest notificationWork1 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                     .setInitialDelay(delayMins1, TimeUnit.MINUTES)
@@ -263,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         Data inputData2 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 10).build();
 
         int delayMins2 = calculateDelay(event) + event.getDuration_mins() - 10;
+        Log.e("ERR33", String.valueOf(delayMins2));
         if (delayMins2 > 0) {
             OneTimeWorkRequest notificationWork2 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                     .setInitialDelay(delayMins2, TimeUnit.MINUTES)
@@ -277,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
         Data inputData3 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 20).build();
 
         int delayMins3 = calculateDelay(event) + event.getDuration_mins() - 20;
+        Log.e("ERR33", String.valueOf(delayMins3));
         if (delayMins3 > 0) {
             OneTimeWorkRequest notificationWork3 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                     .setInitialDelay(delayMins3, TimeUnit.MINUTES)
@@ -291,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
         Data inputData4 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 30).build();
 
         int delayMins4 = calculateDelay(event) + event.getDuration_mins() - 30;
+        Log.e("ERR33", String.valueOf(delayMins4));
         if (delayMins4 > 0) {
             OneTimeWorkRequest notificationWork4 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                     .setInitialDelay(delayMins4, TimeUnit.MINUTES)

@@ -46,5 +46,5 @@
         android:layout_height="0.5dp"
         android:layout_below="@id/event_icon"
         android:layout_alignStart="@id/event_info"
-        android:background="#EEEEEE" />
+        android:background="#DDDDDD" />
 </RelativeLayout>
