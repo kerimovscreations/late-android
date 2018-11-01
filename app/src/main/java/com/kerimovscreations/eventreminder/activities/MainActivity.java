@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         // 20 left
         Data inputData3 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 20).build();
 
-        int delayMins3 = calculateDelay(event) + event.getDuration_mins() - 10;
+        int delayMins3 = calculateDelay(event) + event.getDuration_mins() - 20;
         if (delayMins3 > 0) {
             OneTimeWorkRequest notificationWork3 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                     .setInitialDelay(delayMins3, TimeUnit.MINUTES)
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         // 30 left
         Data inputData4 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 30).build();
 
-        int delayMins4 = calculateDelay(event) + event.getDuration_mins() - 10;
+        int delayMins4 = calculateDelay(event) + event.getDuration_mins() - 30;
         if (delayMins4 > 0) {
             OneTimeWorkRequest notificationWork4 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                     .setInitialDelay(delayMins4, TimeUnit.MINUTES)
