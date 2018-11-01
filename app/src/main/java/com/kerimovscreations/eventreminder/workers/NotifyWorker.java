@@ -1,27 +1,18 @@
 package com.kerimovscreations.eventreminder.workers;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.kerimovscreations.eventreminder.R;
 import com.kerimovscreations.eventreminder.activities.MainActivity;
-
-import java.io.File;
-import java.io.IOException;
 
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
@@ -55,6 +46,12 @@ public class NotifyWorker extends Worker {
         switch (milestone) {
             case 0:
                 sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_0_left);
+                break;
+            case 5:
+                sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_5_left);
+                break;
+            case 10:
+                sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_10_left);
                 break;
             case 20:
                 sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.mins_20_left);

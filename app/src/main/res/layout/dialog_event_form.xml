@@ -15,31 +15,29 @@
         android:textSize="30sp"
         android:textStyle="bold" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/normal_margin">
+    <!--<android.support.design.widget.TextInputLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="@dimen/normal_margin">-->
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/dialog_event_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Title"
-            android:textSize="18sp" />
-    </android.support.design.widget.TextInputLayout>
+    <!--<android.support.design.widget.TextInputEditText-->
+    <!--android:id="@+id/dialog_event_title"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:hint="Title"-->
+    <!--android:textSize="18sp" />-->
+    <!--</android.support.design.widget.TextInputLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/dialog_event_date_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:layout_weight="1">
+            android:layout_marginTop="@dimen/medium_margin">
 
             <ImageView
                 android:id="@+id/dialog_event_date_ic"
@@ -51,21 +49,21 @@
 
             <TextView
                 android:id="@+id/dialog_event_date_text"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/dialog_event_date_ic"
                 android:text="Select date"
+                android:textAlignment="center"
                 android:textColor="@color/colorAccentAlternative"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/dialog_event_duration_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:layout_weight="2">
+            android:layout_marginTop="@dimen/medium_margin">
 
             <ImageView
                 android:id="@+id/dialog_event_duration_ic"
@@ -77,13 +75,14 @@
 
             <TextView
                 android:id="@+id/dialog_event_duration_text"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/dialog_event_duration_ic"
                 android:text="Duration"
+                android:textAlignment="center"
                 android:textColor="@color/colorAccentAlternative"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
         </RelativeLayout>
     </LinearLayout>
 

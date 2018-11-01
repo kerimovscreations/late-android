@@ -21,8 +21,8 @@ public class Event {
     @NonNull
     private int duration_mins;
 
-    public Event(String title, String date, int duration_mins) {
-        this.title = title;
+    public Event(String date, int duration_mins) {
+        this.title = "";
         this.date = date;
         this.duration_mins = duration_mins;
     }
@@ -58,6 +58,21 @@ public class Event {
         }
 
         DateFormat out = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
+
+        return out.format(dateObj);
+    }
+
+    public String getTimeConverted() {
+        Date dateObj = new Date();
+
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+        try {
+            dateObj = format.parse(this.date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DateFormat out = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
         return out.format(dateObj);
     }

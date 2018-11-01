@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         View sheet = getLayoutInflater().inflate(R.layout.dialog_event_form, null);
         bs.setContentView(sheet);
 
-        TextInputEditText editText = sheet.findViewById(R.id.dialog_event_title);
+//        TextInputEditText editText = sheet.findViewById(R.id.dialog_event_title);
         TextView dateText = sheet.findViewById(R.id.dialog_event_date_text);
         TextView durationText = sheet.findViewById(R.id.dialog_event_duration_text);
         final Date[] selectedDate = new Date[1];
@@ -196,11 +196,10 @@ public class MainActivity extends AppCompatActivity {
 
         sheet.findViewById(R.id.dialog_event_submit_btn).setOnClickListener(v -> {
             if (selectedDate[0] != null
-                    && editText.getText().toString().length() > 0
                     && duration_mins[0] >= 20) {
                 DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
 
-                Event event = new Event(editText.getText().toString(), df.format(selectedDate[0]), duration_mins[0]);
+                Event event = new Event(df.format(selectedDate[0]), duration_mins[0]);
                 Log.d("ERR12", df.format(selectedDate[0]));
                 mEventViewModel.insert(event);
                 notificationSet(event);
@@ -233,7 +232,8 @@ public class MainActivity extends AppCompatActivity {
     void notificationSet(Event event) {
         Data inputData = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 0).build();
 
-        int delayMSeconds = calculateDelay(event);
+        // end
+        int delayMSeconds = calculateDelay(event) + event.getDuration_mins();
         if (delayMSeconds > 0) {
             OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                     .setInitialDelay(delayMSeconds, TimeUnit.MINUTES)
@@ -244,33 +244,61 @@ public class MainActivity extends AppCompatActivity {
             WorkManager.getInstance().enqueue(notificationWork);
         }
 
-        if (event.getDuration_mins() > 20 && event.getDuration_mins() < 30) {
 
-            Data inputData1 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 20).build();
+        // 5 left
+        Data inputData1 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 5).build();
 
-            int delayMins1 = calculateDelay(event) + event.getDuration_mins() - 20;
-            if (delayMins1 > 0) {
-                OneTimeWorkRequest notificationWork1 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
-                        .setInitialDelay(delayMins1, TimeUnit.MINUTES)
-                        .setInputData(inputData1)
-                        .addTag(workTag)
-                        .build();
+        int delayMins1 = calculateDelay(event) + event.getDuration_mins() - 5;
+        if (delayMins1 > 0) {
+            OneTimeWorkRequest notificationWork1 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                    .setInitialDelay(delayMins1, TimeUnit.MINUTES)
+                    .setInputData(inputData1)
+                    .addTag(workTag)
+                    .build();
 
-                WorkManager.getInstance().enqueue(notificationWork1);
-            }
-        } else if (event.getDuration_mins() >= 30) {
-            Data inputData2 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 30).build();
+            WorkManager.getInstance().enqueue(notificationWork1);
+        }
 
-            int delayMins2 = calculateDelay(event) + event.getDuration_mins() - 30;
-            if (delayMins2 > 0) {
-                OneTimeWorkRequest notificationWork2 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
-                        .setInitialDelay(delayMins2, TimeUnit.MINUTES)
-                        .setInputData(inputData2)
-                        .addTag(workTag)
-                        .build();
+        // 10 left
+        Data inputData2 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 10).build();
 
-                WorkManager.getInstance().enqueue(notificationWork2);
-            }
+        int delayMins2 = calculateDelay(event) + event.getDuration_mins() - 10;
+        if (delayMins2 > 0) {
+            OneTimeWorkRequest notificationWork2 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                    .setInitialDelay(delayMins2, TimeUnit.MINUTES)
+                    .setInputData(inputData2)
+                    .addTag(workTag)
+                    .build();
+
+            WorkManager.getInstance().enqueue(notificationWork2);
+        }
+
+        // 20 left
+        Data inputData3 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 20).build();
+
+        int delayMins3 = calculateDelay(event) + event.getDuration_mins() - 10;
+        if (delayMins3 > 0) {
+            OneTimeWorkRequest notificationWork3 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                    .setInitialDelay(delayMins3, TimeUnit.MINUTES)
+                    .setInputData(inputData3)
+                    .addTag(workTag)
+                    .build();
+
+            WorkManager.getInstance().enqueue(notificationWork3);
+        }
+
+        // 30 left
+        Data inputData4 = new Data.Builder().putInt("EVENT_ID", event.getId()).putInt("MILESTONE", 30).build();
+
+        int delayMins4 = calculateDelay(event) + event.getDuration_mins() - 10;
+        if (delayMins4 > 0) {
+            OneTimeWorkRequest notificationWork4 = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                    .setInitialDelay(delayMins4, TimeUnit.MINUTES)
+                    .setInputData(inputData4)
+                    .addTag(workTag)
+                    .build();
+
+            WorkManager.getInstance().enqueue(notificationWork4);
         }
     }
 }
