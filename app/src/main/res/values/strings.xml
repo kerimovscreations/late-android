@@ -8,4 +8,21 @@
     <string name="preference_file_key" translatable="false">late_timer_shared_file</string>
     <string name="timer_duration" translatable="false">timer_duration</string>
     <string name="timer_start_timestamp" translatable="false">timer_start_timestamp</string>
+    <string name="select_reminders_title">Select reminder periods</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Okay</string>
+    <string name="mins_5_left">5 minutes left for the next meeting</string>
+    <string name="mins_10_left">10 minutes left for the next meeting</string>
+    <string name="mins_15_left">15 minutes left for the next meeting</string>
+    <string name="mins_20_left">20 minutes left for the next meeting</string>
+    <string name="mins_30_left">30 minutes left for the next meeting</string>
+    <string name="mins_60_left">60 minutes left for the next meeting</string>
+    <string name="mins_0_left">It\'s time for the next meeting</string>
+    <string name="mins_5">5 minutes</string>
+    <string name="mins_10">10 minutes</string>
+    <string name="mins_15">15 minutes</string>
+    <string name="mins_20">20 minutes</string>
+    <string name="mins_30">30 minutes</string>
+    <string name="mins_60">60 minutes</string>
+    <string name="mins_0">At the end</string>
 </resources>

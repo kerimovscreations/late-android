@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="select_the_meeting_duration">Продолжительность встречи</string>
+    <string name="select_reminders_title">Выберите периоды напоминания</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Okay</string>
+    <string name="mins_5_left">5 минут для следующей встречи</string>
+    <string name="mins_10_left">10 минут для следующей встречи</string>
+    <string name="mins_15_left">15 минут для следующей встречи</string>
+    <string name="mins_20_left">20 минут для следующей встречи</string>
+    <string name="mins_30_left">30 минут для следующей встречи</string>
+    <string name="mins_60_left">60 минут для следующей встречи</string>
+    <string name="mins_0_left">Пришло время для следующей встречи</string>
+    <string name="mins_5">5 минут</string>
+    <string name="mins_10">10 минут</string>
+    <string name="mins_15">15 минут</string>
+    <string name="mins_20">20 минут</string>
+    <string name="mins_30">30 минут</string>
+    <string name="mins_60">60 минут</string>
+    <string name="mins_0">в конце</string>
 </resources>

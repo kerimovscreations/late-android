@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.kerimovscreations.lateandroid.R;
+import com.kerimovscreations.lateandroid.dialogs.ReminderPickerDialogFragment;
 import com.kerimovscreations.lateandroid.tools.HelpFunctions;
 
 import java.sql.Timestamp;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mTimerSecondText;
 
     // Variables
+
     private CountDownTimer timer;
     private long mTimerDuration;
 
@@ -126,13 +128,17 @@ public class MainActivity extends AppCompatActivity {
         Log.e("ERR33", String.valueOf(minutes));
         Log.e("ERR33", HelpFunctions.shared.getCurrentLanguageCode());
 
-        mTimerDuration = minutes * 60000;
-
-        HelpFunctions.shared.setTimerStartTimestamp(this, HelpFunctions.shared.getCurrentTimestamp());
-        HelpFunctions.shared.setTimerDuration(this, mTimerDuration);
-
-        startTimer(mTimerDuration);
-        startTimerCircleAnimation(mTimerDuration);
+        if (minutes > 0) {
+            ReminderPickerDialogFragment dialogFragment = new ReminderPickerDialogFragment(this, minutes);
+            dialogFragment.show();
+        }
+//        mTimerDuration = minutes * 60000;
+//
+//        HelpFunctions.shared.setTimerStartTimestamp(this, HelpFunctions.shared.getCurrentTimestamp());
+//        HelpFunctions.shared.setTimerDuration(this, mTimerDuration);
+//
+//        startTimer(mTimerDuration);
+//        startTimerCircleAnimation(mTimerDuration);
     }
 
     void startTimer(long duration) {
