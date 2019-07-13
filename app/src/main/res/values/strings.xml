@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Event Reminder</string>
+    <string name="app_name" translatable="false">LATE</string>
+    <string name="select_the_meeting_duration">Meeting duration</string>
+    <string name="play_icon" translatable="false">Play icon</string>
+    <string name="info_icon" translatable="false">Info icon</string>
+    <string name="settings_icon" translatable="false">Settings icon</string>
+    <string name="timer_circle" translatable="false">Timer circle</string>
+    <string name="preference_file_key" translatable="false">late_timer_shared_file</string>
+    <string name="timer_duration" translatable="false">timer_duration</string>
+    <string name="timer_start_timestamp" translatable="false">timer_start_timestamp</string>
 </resources>
