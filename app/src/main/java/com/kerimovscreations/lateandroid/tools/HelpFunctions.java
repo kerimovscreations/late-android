@@ -3,7 +3,6 @@ package com.kerimovscreations.lateandroid.tools;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.core.content.res.ResourcesCompat;
 import androidx.work.Data;
 
 import com.kerimovscreations.lateandroid.R;
@@ -11,7 +10,6 @@ import com.kerimovscreations.lateandroid.enums.SoundType;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Locale;
 
 import static com.kerimovscreations.lateandroid.enums.SoundType.MALE_NORMAL;
 
@@ -21,10 +19,6 @@ public class HelpFunctions {
 
     private HelpFunctions() {
 
-    }
-
-    public String getCurrentLanguageCode() {
-        return Locale.getDefault().getLanguage();
     }
 
     public void setUserLanguage(Context context, String language) {

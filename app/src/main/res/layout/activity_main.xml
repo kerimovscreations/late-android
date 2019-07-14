@@ -27,7 +27,10 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginEnd="@dimen/normal_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:contentDescription="@string/settings_icon"
+        android:focusable="true"
         android:padding="@dimen/medium_margin"
         app:srcCompat="@drawable/ic_settings_black_24dp" />
 
@@ -39,7 +42,10 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginEnd="@dimen/normal_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:contentDescription="@string/info_icon"
+        android:focusable="true"
         android:padding="@dimen/medium_margin"
         app:srcCompat="@drawable/ic_info_outline_black_24dp" />
 

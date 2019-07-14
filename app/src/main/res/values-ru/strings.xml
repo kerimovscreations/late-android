@@ -2,8 +2,8 @@
 <resources>
     <string name="select_the_meeting_duration">Продолжительность встречи</string>
     <string name="select_reminders_title">Выберите периоды напоминания</string>
-    <string name="cancel">Cancel</string>
-    <string name="submit">Okay</string>
+    <string name="cancel">Отменить</string>
+    <string name="submit">Готово</string>
     <string name="mins_5_left">5 минут для следующей встречи</string>
     <string name="mins_10_left">10 минут для следующей встречи</string>
     <string name="mins_15_left">15 минут для следующей встречи</string>
@@ -18,4 +18,16 @@
     <string name="mins_30">30 минут</string>
     <string name="mins_60">60 минут</string>
     <string name="mins_0">в конце</string>
+    <string name="settings">Настройки</string>
+    <string name="language">Язык</string>
+    <string name="save">Готово</string>
+    <string name="current_language">Русский</string>
+    <string name="sound">Звук</string>
+    <string name="male">Мужской</string>
+    <string name="select_language">Изменение языка</string>
+    <string name="female">Женский</string>
+    <string name="male_fun_1">Мужской + Фильмы 1</string>
+    <string name="male_fun_2">Мужской + Фильмы 2</string>
+    <string name="female_fun_1">Женский + Фильмы 1</string>
+    <string name="female_fun_2">Женский + Фильмы 2</string>
 </resources>

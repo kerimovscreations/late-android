@@ -23,6 +23,7 @@ import androidx.work.WorkManager;
 
 import com.kerimovscreations.lateandroid.R;
 import com.kerimovscreations.lateandroid.dialogs.ReminderPickerDialogFragment;
+import com.kerimovscreations.lateandroid.dialogs.SettingsDialogFragment;
 import com.kerimovscreations.lateandroid.models.ReminderOption;
 import com.kerimovscreations.lateandroid.tools.HelpFunctions;
 import com.kerimovscreations.lateandroid.workers.NotifyWorker;
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             long currentTimestamp = HelpFunctions.shared.getCurrentTimestamp();
             long millisUntilFinished = timerTimestamp + mTimerDuration - currentTimestamp;
             startTimer(millisUntilFinished);
-            startTimerCircleAnimation(millisUntilFinished);
+            startTimerCircleAnimation(mTimerDuration, millisUntilFinished);
         }
     }
 
@@ -107,6 +108,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             pickTime();
         }
+    }
+
+    @OnClick(R.id.btn_settings)
+    void onSettings() {
+        SettingsDialogFragment fragment = new SettingsDialogFragment(this);
+        fragment.show();
     }
 
     /* Functions */
@@ -134,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 HelpFunctions.shared.setTimerDuration(this, mTimerDuration);
 
                 startTimer(mTimerDuration);
-                startTimerCircleAnimation(mTimerDuration);
+                startTimerCircleAnimation(mTimerDuration, mTimerDuration);
             });
             dialogFragment.show();
         }
@@ -160,14 +167,14 @@ public class MainActivity extends AppCompatActivity {
         timer.start();
     }
 
-    void startTimerCircleAnimation(long millisUntilFinished) {
+    void startTimerCircleAnimation(long duration, long millisUntilFinished) {
         AnimationSet animSet = new AnimationSet(true);
         animSet.setInterpolator(new LinearInterpolator());
         animSet.setFillAfter(true);
         animSet.setFillEnabled(true);
 
         final RotateAnimation animRotate = new RotateAnimation(
-                (float) ((double) (mTimerDuration - millisUntilFinished) / (double) mTimerDuration) * 178.0f,
+                (float) ((double) (duration - millisUntilFinished) / (double) duration) * 179.0f,
                 178.0f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);

@@ -25,7 +25,20 @@
     <string name="mins_30">30 minutes</string>
     <string name="mins_60">60 minutes</string>
     <string name="mins_0">At the end</string>
-    <string name="display_language">display_language</string>
-    <string name="is_funny_sound">is_funny_sound</string>
-    <string name="sound_type">sound_type</string>
+    <string name="display_language" translatable="false">display_language</string>
+    <string name="is_funny_sound" translatable="false">is_funny_sound</string>
+    <string name="sound_type" translatable="false">sound_type</string>
+    <string name="settings">Settings</string>
+    <string name="language">Language</string>
+    <string name="save">Save</string>
+    <string name="current_language">English</string>
+    <string name="sound">Sound</string>
+    <string name="male">Male</string>
+    <string name="select_language">Select language</string>
+    <string name="edit_icon" translatable="false">Edit icon</string>
+    <string name="female">Female</string>
+    <string name="male_fun_1">Мужской + Фильмы 1</string>
+    <string name="male_fun_2">Мужской + Фильмы 2</string>
+    <string name="female_fun_1">Женский + Фильмы 1</string>
+    <string name="female_fun_2">Женский + Фильмы 2</string>
 </resources>
