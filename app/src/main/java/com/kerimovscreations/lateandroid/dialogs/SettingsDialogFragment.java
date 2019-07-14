@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.kerimovscreations.lateandroid.R;
+import com.kerimovscreations.lateandroid.enums.SoundType;
 import com.kerimovscreations.lateandroid.tools.HelpFunctions;
 import com.kerimovscreations.lateandroid.tools.LocaleHelper;
 
@@ -25,6 +26,7 @@ public class SettingsDialogFragment extends Dialog implements
     private TextView mSoundTitle;
     private TextView mSoundText;
     private TextView mTitle;
+    private TextView mSubmitBtn;
 
     public SettingsDialogFragment(Context context) {
         super(context);
@@ -48,6 +50,8 @@ public class SettingsDialogFragment extends Dialog implements
         mLanguageText = findViewById(R.id.language_text);
         mSoundTitle = findViewById(R.id.sound_title);
         mSoundText = findViewById(R.id.sound_text);
+        mSubmitBtn = findViewById(R.id.btn_submit);
+        updateTexts();
     }
 
     private void updateTexts() {
@@ -55,7 +59,36 @@ public class SettingsDialogFragment extends Dialog implements
         mLanguageTitle.setText(R.string.language);
         mLanguageText.setText(R.string.current_language);
         mSoundTitle.setText(R.string.sound);
-        mSoundText.setText(R.string.male);
+
+        SoundType soundType = SoundType.values()[HelpFunctions.shared.getSoundType(mContext)];
+
+        int resId;
+        switch (soundType) {
+            case MALE_NORMAL:
+                resId = R.string.male;
+                break;
+            case FEMALE_NORMAL:
+                resId = R.string.female;
+                break;
+            case MALE_FUNNY_1:
+                resId = R.string.male_fun_1;
+                break;
+            case FEMALE_FUNNY_1:
+                resId = R.string.female_fun_1;
+                break;
+            case MALE_FUNNY_2:
+                resId = R.string.male_fun_2;
+                break;
+            case FEMALE_FUNNY_2:
+                resId = R.string.female_fun_2;
+                break;
+            default:
+                resId = R.string.male;
+        }
+
+        mSoundText.setText(resId);
+
+        mSubmitBtn.setText(R.string.submit);
     }
 
     /* Click handlers */
@@ -111,6 +144,29 @@ public class SettingsDialogFragment extends Dialog implements
     }
 
     private void onSound() {
+        AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+        CharSequence[] items;
 
+        if (LocaleHelper.getLanguage(mContext).equals("en")) {
+            items = new CharSequence[]{mContext.getString(R.string.male), mContext.getString(R.string.female)};
+        } else {
+            items = new CharSequence[]{mContext.getString(R.string.male), mContext.getString(R.string.female),
+                    mContext.getString(R.string.male_fun_1), mContext.getString(R.string.female_fun_1),
+                    mContext.getString(R.string.male_fun_2), mContext.getString(R.string.female_fun_2)};
+        }
+
+        final int[] selectedOption = {-1};
+
+        SoundType soundType = SoundType.values()[HelpFunctions.shared.getSoundType(mContext)];
+        selectedOption[0] = soundType.getValue();
+
+        adb.setSingleChoiceItems(items, selectedOption[0], (dialog, which) -> selectedOption[0] = which);
+        adb.setPositiveButton(mContext.getString(R.string.save), (dialog, which) -> {
+            HelpFunctions.shared.setSoundType(mContext, selectedOption[0]);
+            updateTexts();
+        });
+        adb.setNegativeButton(mContext.getString(R.string.cancel), null);
+        adb.setTitle(mContext.getString(R.string.select_sound));
+        adb.show();
     }
 }

@@ -41,4 +41,41 @@
     <string name="male_fun_2">Мужской + Фильмы 2</string>
     <string name="female_fun_1">Женский + Фильмы 1</string>
     <string name="female_fun_2">Женский + Фильмы 2</string>
+    <string name="select_sound">Select sound</string>
+    <string name="guidelines_desc">
+        Welcome to LATE! \
+\
+First thing that you will see when you open an application is a timer that can be set for your meetings.\
+In order to set your timer we provide you with the following instructions:\
+\
+VOICE NOTIFICATION \
+\
+Timer notification of our application functions in two languages. \
+•    English\
+•    Russian\
+\
+Each language has male and female versions of voice overs for you to be notified.\
+Additionally, if you select Russian language, we offer some funny phrases from Old Russian movies with their original voices.\
+To test the voices, please, press the “Settings” button in the upper right corner and choose the language and configuration in which your application will work. Then, press the “Done” button to complete your voice configuration.\
+\
+MEETING DURATION:\
+\
+For setting the duration of your meeting, you should press on either “Play” button or bold Zero. As a result, “Meeting duration” configuration will appear on the screen. Please, bear in mind that the maximum duration time that can be set is 1 hour 55 minutes. After you decide the duration, tap on the “Select” button for completing the configuration.\
+\
+REMINDER PERIODS:\
+\
+After selecting the meeting duration, you need to activate the periods to remind you how much time is left until the end of your meeting (your next meeting). The duration of periods are:\
+\
+> 0 minutes\
+> 5 minutes\
+> 10 minutes\
+> 15 minutes\
+> 20 minutes\
+> 30 minutes\
+> 35 minutes\
+> 40 minutes\
+> 45 minutes\
+> 50 minutes\
+> 55 minutes
+    </string>
 </resources>
