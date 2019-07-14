@@ -25,4 +25,7 @@
     <string name="mins_30">30 minutes</string>
     <string name="mins_60">60 minutes</string>
     <string name="mins_0">At the end</string>
+    <string name="display_language">display_language</string>
+    <string name="is_funny_sound">is_funny_sound</string>
+    <string name="sound_type">sound_type</string>
 </resources>

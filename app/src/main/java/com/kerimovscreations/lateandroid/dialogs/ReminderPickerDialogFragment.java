@@ -78,6 +78,9 @@ public class ReminderPickerDialogFragment extends Dialog implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_submit:
+                if (mListener != null) {
+                    mListener.onSubmit(mOptions);
+                }
                 dismiss();
                 break;
             case R.id.btn_cancel:
@@ -149,5 +152,15 @@ public class ReminderPickerDialogFragment extends Dialog implements
             mPlayingIndex = -1;
         });
         mMediaPlayer.start();
+    }
+
+    public interface OnInteractionListener {
+        void onSubmit(ArrayList<ReminderOption> options);
+    }
+
+    private OnInteractionListener mListener;
+
+    public void setOnInteractionListener(OnInteractionListener listener) {
+        mListener = listener;
     }
 }
