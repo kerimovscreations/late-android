@@ -5,7 +5,7 @@
     android:fontFamily="@font/lato_bold"
     android:padding="@dimen/medium_margin"
     android:text="@string/select_the_meeting_duration"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorAccent"
     android:textAlignment="center"
     android:textColor="@color/colorWhite"
     android:textSize="18sp" />
