@@ -22,6 +22,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.kerimovscreations.lateandroid.R;
+import com.kerimovscreations.lateandroid.dialogs.GuidelinesDialogFragment;
 import com.kerimovscreations.lateandroid.dialogs.ReminderPickerDialogFragment;
 import com.kerimovscreations.lateandroid.dialogs.SettingsDialogFragment;
 import com.kerimovscreations.lateandroid.models.ReminderOption;
@@ -113,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_settings)
     void onSettings() {
         SettingsDialogFragment fragment = new SettingsDialogFragment(this);
+        fragment.show();
+    }
+
+    @OnClick(R.id.btn_info)
+    void onGuidelines() {
+        GuidelinesDialogFragment fragment = new GuidelinesDialogFragment(this);
         fragment.show();
     }
 

@@ -78,4 +78,5 @@ After selecting the meeting duration, you need to activate the periods to remind
 > 50 minutes\
 > 55 minutes
     </string>
+    <string name="guidelines">Guidelines</string>
 </resources>

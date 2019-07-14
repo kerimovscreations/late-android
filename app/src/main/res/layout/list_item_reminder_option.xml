@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:background="@drawable/bg_play_btn"
         android:contentDescription="@string/play_icon"
-        android:tint="@color/colorRed"
+        android:tint="@color/colorAccent"
         app:srcCompat="@drawable/ic_play_arrow_white_24dp" />
 
     <androidx.appcompat.widget.SwitchCompat

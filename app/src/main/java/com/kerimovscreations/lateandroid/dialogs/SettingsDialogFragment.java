@@ -111,7 +111,7 @@ public class SettingsDialogFragment extends Dialog implements
     }
 
     private void onLanguage() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder adb = new AlertDialog.Builder(mContext, R.style.AppThemeAlertDialog);
         CharSequence[] items = new CharSequence[]{"English", "Русский"};
         final int[] selectedOption = {-1};
 
@@ -144,7 +144,7 @@ public class SettingsDialogFragment extends Dialog implements
     }
 
     private void onSound() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder adb = new AlertDialog.Builder(mContext, R.style.AppThemeAlertDialog);
         CharSequence[] items;
 
         if (LocaleHelper.getLanguage(mContext).equals("en")) {
