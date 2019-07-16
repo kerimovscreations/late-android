@@ -25,6 +25,7 @@ import com.kerimovscreations.lateandroid.R;
 import com.kerimovscreations.lateandroid.dialogs.GuidelinesDialogFragment;
 import com.kerimovscreations.lateandroid.dialogs.ReminderPickerDialogFragment;
 import com.kerimovscreations.lateandroid.dialogs.SettingsDialogFragment;
+import com.kerimovscreations.lateandroid.dialogs.TimePickerDialogFragment;
 import com.kerimovscreations.lateandroid.models.ReminderOption;
 import com.kerimovscreations.lateandroid.tools.HelpFunctions;
 import com.kerimovscreations.lateandroid.workers.NotifyWorker;
@@ -111,6 +112,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.timer_time_min)
+    void onTime() {
+        if (this.timer == null) {
+            pickTime();
+        }
+    }
+
     @OnClick(R.id.btn_settings)
     void onSettings() {
         SettingsDialogFragment fragment = new SettingsDialogFragment(this);
@@ -126,14 +134,9 @@ public class MainActivity extends AppCompatActivity {
     /* Functions */
 
     void pickTime() {
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                (timePicker, hours, minutes) -> pickReminders(hours * 60 + minutes),
-                0, 0, true);
-
-        LayoutInflater inflater = getLayoutInflater();
-        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_title, null);
-        timePickerDialog.setCustomTitle(view);
-        timePickerDialog.show();
+        TimePickerDialogFragment timePickerDialogFragment = new TimePickerDialogFragment(this);
+        timePickerDialogFragment.setOnInteractionListener(this::pickReminders);
+        timePickerDialogFragment.show();
     }
 
     void pickReminders(int minutes) {

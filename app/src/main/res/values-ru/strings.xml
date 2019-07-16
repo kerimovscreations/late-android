@@ -67,4 +67,7 @@
 > 55 минут\
     </string>
     <string name="guidelines">Руководство</string>
+    <string name="hour">Час</string>
+    <string name="minutes">Минут</string>
+    <string name="select">Выбрать</string>
 </resources>
