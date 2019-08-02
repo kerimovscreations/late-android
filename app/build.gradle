@@ -6,8 +6,8 @@ android {
         applicationId "com.kerimovscreations.eventreminder"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.0.0"
+        versionCode 6
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

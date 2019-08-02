@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kerimovscreations.lateandroid.R;
 import com.kerimovscreations.lateandroid.adapters.ReminderOptionRecyclerViewAdapter;
 import com.kerimovscreations.lateandroid.models.ReminderOption;
+import com.kerimovscreations.lateandroid.tools.HelpFunctions;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -75,6 +76,12 @@ public class ReminderPickerDialogFragment extends Dialog implements
     }
 
     @Override
+    public void dismiss() {
+        super.dismiss();
+        this.stopSound();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_submit:
@@ -104,6 +111,10 @@ public class ReminderPickerDialogFragment extends Dialog implements
         if (mPlayingIndex >= 0) {
             mOptions.get(mPlayingIndex).setPlaying(false);
             mAdapter.notifyItemChanged(mPlayingIndex);
+
+            if (mPlayingIndex == index) {
+                return;
+            }
         }
 
         if (mOptions.get(index).isPlaying()) {
@@ -116,33 +127,7 @@ public class ReminderPickerDialogFragment extends Dialog implements
             mAdapter.notifyItemChanged(index);
         }
 
-        int resourceId;
-
-        switch (mOptions.get(index).getValue()) {
-            case 0:
-                resourceId = R.raw.en_male_mins_0_left;
-                break;
-            case 5:
-                resourceId = R.raw.en_male_mins_5_left;
-                break;
-            case 10:
-                resourceId = R.raw.en_male_mins_10_left;
-                break;
-            case 15:
-                resourceId = R.raw.en_male_mins_15_left;
-                break;
-            case 20:
-                resourceId = R.raw.en_male_mins_20_left;
-                break;
-            case 30:
-                resourceId = R.raw.en_male_mins_30_left;
-                break;
-            case 60:
-                resourceId = R.raw.en_male_mins_60_left;
-                break;
-            default:
-                resourceId = R.raw.en_male_mins_0_left;
-        }
+        int resourceId = HelpFunctions.shared.getNotificationData(getContext(), mOptions.get(index).getValue()).getInt("SOUND_ID", R.raw.en_male_mins_0_left);
 
         mMediaPlayer = MediaPlayer.create(mContext, resourceId);
         mMediaPlayer.setOnCompletionListener(mediaPlayer -> {
