@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.kerimovscreations.lateandroid.R;
+import com.kerimovscreations.lateandroid.application.GlobalApplication;
 import com.kerimovscreations.lateandroid.enums.SoundType;
 import com.kerimovscreations.lateandroid.tools.HelpFunctions;
 import com.kerimovscreations.lateandroid.tools.LocaleHelper;
@@ -55,10 +56,10 @@ public class SettingsDialogFragment extends Dialog implements
     }
 
     private void updateTexts() {
-        mTitle.setText(R.string.settings);
-        mLanguageTitle.setText(R.string.language);
-        mLanguageText.setText(R.string.current_language);
-        mSoundTitle.setText(R.string.sound);
+        mTitle.setText(mContext.getString(R.string.settings));
+        mLanguageTitle.setText(mContext.getString(R.string.language));
+        mLanguageText.setText(mContext.getString(R.string.current_language));
+        mSoundTitle.setText(mContext.getString(R.string.sound));
 
         SoundType soundType = SoundType.values()[HelpFunctions.shared.getSoundType(mContext)];
 
@@ -86,9 +87,9 @@ public class SettingsDialogFragment extends Dialog implements
                 resId = R.string.male;
         }
 
-        mSoundText.setText(resId);
+        mSoundText.setText(mContext.getString(resId));
 
-        mSubmitBtn.setText(R.string.submit);
+        mSubmitBtn.setText(mContext.getString(R.string.submit));
     }
 
     /* Click handlers */
@@ -115,9 +116,9 @@ public class SettingsDialogFragment extends Dialog implements
         CharSequence[] items = new CharSequence[]{"English", "Русский"};
         final int[] selectedOption = {-1};
 
-        if (LocaleHelper.getLanguage(mContext).equals("en")) {
+        if (GlobalApplication.localeManager.getLanguage().equals("en")) {
             selectedOption[0] = 0;
-        } else if (LocaleHelper.getLanguage(mContext).equals("ru")) {
+        } else if (GlobalApplication.localeManager.getLanguage().equals("ru")) {
             selectedOption[0] = 1;
         }
 
@@ -125,12 +126,12 @@ public class SettingsDialogFragment extends Dialog implements
         adb.setPositiveButton(mContext.getString(R.string.save), (dialog, which) -> {
             switch (selectedOption[0]) {
                 case 0:
-                    LocaleHelper.setLocale(mContext, "en");
+                    GlobalApplication.localeManager.setNewLocale(mContext, "en");
                     HelpFunctions.shared.setUserLanguage(mContext, "en");
                     updateTexts();
                     break;
                 case 1:
-                    LocaleHelper.setLocale(mContext, "ru");
+                    GlobalApplication.localeManager.setNewLocale(mContext, "ru");
                     HelpFunctions.shared.setUserLanguage(mContext, "ru");
                     updateTexts();
                     break;
@@ -147,7 +148,7 @@ public class SettingsDialogFragment extends Dialog implements
         AlertDialog.Builder adb = new AlertDialog.Builder(mContext, R.style.AppThemeAlertDialog);
         CharSequence[] items;
 
-        if (LocaleHelper.getLanguage(mContext).equals("en")) {
+        if (GlobalApplication.localeManager.getLanguage().equals("en")) {
             items = new CharSequence[]{mContext.getString(R.string.male), mContext.getString(R.string.female)};
         } else {
             items = new CharSequence[]{mContext.getString(R.string.male), mContext.getString(R.string.female),

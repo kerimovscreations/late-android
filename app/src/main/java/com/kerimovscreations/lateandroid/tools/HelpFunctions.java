@@ -1,16 +1,27 @@
 package com.kerimovscreations.lateandroid.tools;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.os.Build;
 
 import androidx.work.Data;
 
 import com.kerimovscreations.lateandroid.R;
+import com.kerimovscreations.lateandroid.application.GlobalApplication;
 import com.kerimovscreations.lateandroid.enums.SoundType;
 
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Map;
 
+import static android.content.pm.PackageManager.GET_META_DATA;
+import static android.os.Build.VERSION_CODES.P;
 import static com.kerimovscreations.lateandroid.enums.SoundType.MALE_NORMAL;
 
 public class HelpFunctions {
@@ -27,7 +38,7 @@ public class HelpFunctions {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(context.getString(R.string.display_language), language);
         editor.apply();
-        LocaleHelper.setLocale(context, language);
+        GlobalApplication.localeManager.setNewLocale(context, language);
 
         if (language.equals("en")) {
             setSoundType(context, MALE_NORMAL.getValue());
@@ -96,6 +107,48 @@ public class HelpFunctions {
         long duration = HelpFunctions.shared.getTimerDuration(context);
         long currentTimestamp = getCurrentTimestamp();
         return (currentTimestamp - startTimestamp) < duration;
+    }
+
+    public static Object getPrivateField(String className, String fieldName, Object object) {
+        try {
+            Class c = Class.forName(className);
+            Field f = c.getDeclaredField(fieldName);
+            f.setAccessible(true);
+            return f.get(object);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static String getTitleCache() {
+        // https://developer.android.com/about/versions/pie/restrictions-non-sdk-interfaces
+        if (isAtLeastVersion(P)) return "Can't access title cache\nstarting from API 28";
+        Object o = HelpFunctions.getPrivateField("android.app.ApplicationPackageManager", "sStringCache", null);
+        Map<?, WeakReference<CharSequence>> cache = (Map<?, WeakReference<CharSequence>>) o;
+        if (cache == null) return "";
+
+        StringBuilder builder = new StringBuilder("Cache:").append("\n");
+        for (Map.Entry<?, WeakReference<CharSequence>> e : cache.entrySet()) {
+            CharSequence title = e.getValue().get();
+            if (title != null) {
+                builder.append(title).append("\n");
+            }
+        }
+        return builder.toString();
+    }
+
+    public static Resources getTopLevelResources(Activity a) {
+        try {
+            return a.getPackageManager().getResourcesForApplication(a.getApplicationInfo());
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isAtLeastVersion(int version) {
+        return Build.VERSION.SDK_INT >= version;
     }
 
     public Data getNotificationData(Context context, int value) {

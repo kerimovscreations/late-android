@@ -1,81 +1,60 @@
 package com.kerimovscreations.lateandroid.tools;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.preference.PreferenceManager;
 
 import java.util.Locale;
 
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
+import static android.os.Build.VERSION_CODES.N;
+
 public class LocaleHelper {
 
     private static final String SELECTED_LANGUAGE = "Locale.FingerPrintAuthHelper.Selected.Language";
+    public static final String LANGUAGE_ENGLISH = "en";
 
-    public static Context onAttach(Context context) {
-        String lang = getPersistedData(context, Locale.getDefault().getLanguage());
-        return setLocale(context, lang);
+    private final SharedPreferences prefs;
+
+    public LocaleHelper(Context context) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static Context onAttach(Context context, String defaultLanguage) {
-        String lang = getPersistedData(context, defaultLanguage);
-        return setLocale(context, lang);
+    public Context setLocale(Context c) {
+        return updateResources(c, getLanguage());
     }
 
-    public static String getLanguage(Context context) {
-        return getPersistedData(context, Locale.getDefault().getLanguage());
+    public Context setNewLocale(Context c, String language) {
+        persistLanguage(language);
+        return updateResources(c, language);
     }
 
-    public static Context setLocale(Context context, String language) {
-        persist(context, language);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return updateResources(context, language);
-        }
-
-        return updateResourcesLegacy(context, language);
+    public String getLanguage() {
+        return prefs.getString(SELECTED_LANGUAGE, LANGUAGE_ENGLISH);
     }
 
-    private static String getPersistedData(Context context, String defaultLanguage) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(SELECTED_LANGUAGE, defaultLanguage);
+    @SuppressLint("ApplySharedPref")
+    private void persistLanguage(String language) {
+        prefs.edit().putString(SELECTED_LANGUAGE, language).commit();
     }
 
-    private static void persist(Context context, String language) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-
-        editor.putString(SELECTED_LANGUAGE, language);
-        editor.apply();
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private static Context updateResources(Context context, String language) {
+    private Context updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
 
-        Configuration configuration = context.getResources().getConfiguration();
-        configuration.setLocale(locale);
-        configuration.setLayoutDirection(locale);
-
-        return context.createConfigurationContext(configuration);
-    }
-
-    @SuppressWarnings("deprecation")
-    private static Context updateResourcesLegacy(Context context, String language) {
-        Locale locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-        configuration.setLayoutDirection(locale);
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        Configuration config = context.getResources().getConfiguration();
+        config.setLocale(locale);
+        context.createConfigurationContext(config);
+        context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
 
         return context;
+    }
+
+    public static Locale getLocale(Resources res) {
+        Configuration config = res.getConfiguration();
+        return HelpFunctions.isAtLeastVersion(N) ? config.getLocales().get(0) : config.locale;
     }
 }
