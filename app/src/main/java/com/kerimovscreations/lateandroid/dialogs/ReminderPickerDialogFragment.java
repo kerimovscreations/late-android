@@ -27,7 +27,7 @@ public class ReminderPickerDialogFragment extends Dialog implements
     private MediaPlayer mMediaPlayer;
     private ArrayList<ReminderOption> mOptions;
     private ReminderOptionRecyclerViewAdapter mAdapter;
-    private int mPlayingIndex;
+    private int mPlayingIndex = -1;
 
     public ReminderPickerDialogFragment(Context context, int minutes) {
         super(context);

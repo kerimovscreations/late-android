@@ -120,6 +120,8 @@ public class SettingsDialogFragment extends Dialog implements
             selectedOption[0] = 0;
         } else if (GlobalApplication.localeManager.getLanguage().equals("ru")) {
             selectedOption[0] = 1;
+        } else {
+            selectedOption[0] = 0;
         }
 
         adb.setSingleChoiceItems(items, selectedOption[0], (dialog, which) -> selectedOption[0] = which);

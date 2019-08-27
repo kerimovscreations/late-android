@@ -7,6 +7,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
+import com.kerimovscreations.lateandroid.R;
+
 import java.util.Locale;
 
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
@@ -20,7 +22,8 @@ public class LocaleHelper {
     private final SharedPreferences prefs;
 
     public LocaleHelper(Context context) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
     }
 
     public Context setLocale(Context c) {

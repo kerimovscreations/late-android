@@ -45,12 +45,6 @@ public class HelpFunctions {
         }
     }
 
-    public String getUserLanguage(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        return sharedPref.getString(context.getString(R.string.display_language), "en");
-    }
-
     public void setSoundType(Context context, int soundType) {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -121,32 +115,6 @@ public class HelpFunctions {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static String getTitleCache() {
-        // https://developer.android.com/about/versions/pie/restrictions-non-sdk-interfaces
-        if (isAtLeastVersion(P)) return "Can't access title cache\nstarting from API 28";
-        Object o = HelpFunctions.getPrivateField("android.app.ApplicationPackageManager", "sStringCache", null);
-        Map<?, WeakReference<CharSequence>> cache = (Map<?, WeakReference<CharSequence>>) o;
-        if (cache == null) return "";
-
-        StringBuilder builder = new StringBuilder("Cache:").append("\n");
-        for (Map.Entry<?, WeakReference<CharSequence>> e : cache.entrySet()) {
-            CharSequence title = e.getValue().get();
-            if (title != null) {
-                builder.append(title).append("\n");
-            }
-        }
-        return builder.toString();
-    }
-
-    public static Resources getTopLevelResources(Activity a) {
-        try {
-            return a.getPackageManager().getResourcesForApplication(a.getApplicationInfo());
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static boolean isAtLeastVersion(int version) {
         return Build.VERSION.SDK_INT >= version;
     }
@@ -155,7 +123,7 @@ public class HelpFunctions {
 
         int resourceId = R.raw.en_male_mins_0_left;
         int titleId = R.string.mins_0_left;
-        String language = getUserLanguage(context);
+        String language = GlobalApplication.localeManager.getLanguage();
         SoundType soundType = SoundType.values()[getSoundType(context)];
 
         switch (value) {
