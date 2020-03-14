@@ -1,101 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_main_gradient">
+<layout>
 
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/normal_margin"
-        android:layout_marginEnd="@dimen/normal_margin"
-        android:fontFamily="@font/lato_black"
-        android:text="@string/app_name"
-        android:textColor="@color/colorWhite"
-        android:textSize="40sp"
-        tools:ignore="RelativeOverlap" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/btn_settings"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/app_name"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:layout_marginEnd="@dimen/normal_margin"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:contentDescription="@string/settings_icon"
-        android:focusable="true"
-        android:padding="@dimen/medium_margin"
-        app:srcCompat="@drawable/ic_settings_black_24dp" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_main" />
 
-    <ImageView
-        android:id="@+id/btn_info"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/btn_settings"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:layout_marginEnd="@dimen/normal_margin"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:contentDescription="@string/info_icon"
-        android:focusable="true"
-        android:padding="@dimen/medium_margin"
-        app:srcCompat="@drawable/ic_info_outline_black_24dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#4C000000" />
 
-    <ImageView
-        android:id="@+id/timer_circle"
-        android:layout_width="500dp"
-        android:layout_height="500dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="-250dp"
-        android:contentDescription="@string/timer_circle"
-        android:src="@mipmap/ic_timer_half_circle" />
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/normal_margin"
+            android:layout_marginEnd="@dimen/normal_margin"
+            android:fontFamily="@font/lato_black"
+            android:text="@string/app_name"
+            android:textColor="@color/colorWhite"
+            android:textSize="40sp"
+            tools:ignore="RelativeOverlap" />
 
-    <TextView
-        android:id="@+id/timer_time_min"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/normal_margin"
-        android:fontFamily="@font/lato_black"
-        android:text="0 00"
-        android:textColor="@color/colorWhite"
-        android:textSize="70sp"
-        tools:ignore="HardcodedText" />
+        <ImageView
+            android:id="@+id/btn_settings"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/app_name"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/normal_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/settings_icon"
+            android:focusable="true"
+            android:padding="@dimen/medium_margin"
+            app:srcCompat="@drawable/ic_settings_black_24dp" />
 
-    <TextView
-        android:id="@+id/timer_time_sec"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/timer_time_min"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/medium_margin"
-        android:layout_marginBottom="@dimen/medium_margin"
-        android:layout_toEndOf="@id/timer_time_min"
-        android:alpha="0.25"
-        android:fontFamily="@font/lato_black"
-        android:text="00"
-        android:textColor="@color/colorWhite"
-        android:textSize="36sp"
-        tools:ignore="HardcodedText" />
+        <ImageView
+            android:id="@+id/btn_info"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/btn_settings"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/normal_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/info_icon"
+            android:focusable="true"
+            android:padding="@dimen/medium_margin"
+            app:srcCompat="@drawable/ic_info_outline_black_24dp" />
 
-    <ImageView
-        android:id="@+id/btn_play"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/normal_margin"
-        android:background="@drawable/bg_play_btn"
-        android:contentDescription="@string/play_icon"
-        android:padding="@dimen/medium_margin"
-        android:tint="@color/colorAccent"
-        app:srcCompat="@drawable/ic_play_arrow_white_24dp" />
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerInParent="true">
+
+            <com.kerimovscreations.lateandroid.tools.CircularSeekBar
+                android:id="@+id/circular_seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:circle_progress_color="@color/colorAccent"
+                app:circle_x_radius="150dp"
+                app:circle_y_radius="150dp"
+                app:max="120"
+                app:pointer_alpha_ontouch="80"
+                app:pointer_color="@color/colorAccentAlternative"
+                app:pointer_halo_color="@color/colorAccent"
+                app:pointer_halo_color_ontouch="@color/colorAccent"
+                app:progress="0"
+                app:start_angle="270"
+                app:use_custom_radii="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/timer_time_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/normal_margin"
+                    android:fontFamily="@font/lato_black"
+                    android:text="0 00"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="70sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/timer_time_sec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:alpha="0.25"
+                    android:fontFamily="@font/lato_black"
+                    android:text="00"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="36sp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/btn_play"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/normal_margin"
+            android:background="@drawable/bg_play_btn"
+            android:contentDescription="@string/play_icon"
+            android:padding="@dimen/medium_margin"
+            android:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_play_arrow_white_24dp" />
+    </RelativeLayout>
+
+</layout>

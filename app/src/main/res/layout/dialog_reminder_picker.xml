@@ -1,60 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/normal_margin"
-    android:background="@drawable/bg_transparent_red"
-    android:padding="@dimen/normal_margin">
+<layout>
 
-    <TextView
-        android:id="@+id/title"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/lato_black"
-        android:text="@string/select_reminders_title"
-        android:textColor="@color/colorWhite"
-        android:textSize="24sp" />
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/normal_margin"
+        android:background="@drawable/bg_transparent_red"
+        android:padding="@dimen/normal_margin">
 
-    <TextView
-        android:id="@+id/btn_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_alignParentBottom="true"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:fontFamily="@font/lato_bold"
-        android:gravity="center"
-        android:text="@string/cancel"
-        android:textAlignment="center"
-        android:textColor="@color/colorWhite"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_black"
+            android:text="@string/select_reminders_title"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/btn_submit"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_above="@id/btn_cancel"
-        android:layout_marginBottom="@dimen/normal_margin"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:fontFamily="@font/lato_bold"
-        android:gravity="center"
-        android:text="@string/submit"
-        android:textAlignment="center"
-        android:textColor="@color/colorWhite"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/lato_bold"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp" />
 
+        <TextView
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_above="@id/btn_cancel"
+            android:layout_marginBottom="@dimen/normal_margin"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/lato_bold"
+            android:gravity="center"
+            android:text="@string/submit"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_options"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/btn_submit"
-        android:layout_below="@id/title"
-        android:layout_marginTop="@dimen/normal_margin"
-        android:layout_marginBottom="@dimen/normal_margin"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-</RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btn_submit"
+            android:layout_below="@id/title"
+            android:layout_marginTop="@dimen/normal_margin"
+            android:layout_marginBottom="@dimen/normal_margin"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </RelativeLayout>
+</layout>

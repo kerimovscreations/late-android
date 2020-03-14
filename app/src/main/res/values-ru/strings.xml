@@ -70,4 +70,5 @@
     <string name="hour">Час</string>
     <string name="minutes">Минут</string>
     <string name="select">Выбрать</string>
+    <string name="warning_min_time">Timer should be set more than 5 minutes to start</string>
 </resources>

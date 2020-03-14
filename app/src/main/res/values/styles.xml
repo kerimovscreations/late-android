@@ -19,4 +19,11 @@
     <style name="AppThemeAlertDialog" parent="android:Theme.Material.Light.Dialog.Alert">
         <item name="android:colorAccent">?attr/colorAccent</item>
     </style>
+
+    <style name="DialogTheme" parent="AppTheme">
+<!--        <item name="android:paddingRight">0dp</item>-->
+<!--        <item name="android:paddingLeft">0dp</item>-->
+<!--        <item name="android:layout_width">match_parent</item>-->
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
