@@ -82,7 +82,9 @@ After selecting the meeting duration, you need to activate the periods to remind
     <string name="hour">Hour</string>
     <string name="minutes">Minutes</string>
     <string name="select">Select</string>
-    <string name="warning_min_time">Timer should be set more than 5 minutes to start</string>
+    <string name="warning_min_time">The timer should be set more than 5 minutes to start</string>
+    <string name="custom">Custom</string>
+    <string name="custom_sound">Custom sound</string>
 
     <string-array name="hours_array" translatable="false">
         <item>0</item>

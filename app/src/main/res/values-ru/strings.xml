@@ -70,5 +70,7 @@
     <string name="hour">Час</string>
     <string name="minutes">Минут</string>
     <string name="select">Выбрать</string>
-    <string name="warning_min_time">Timer should be set more than 5 minutes to start</string>
+    <string name="warning_min_time">Таймер должен быть установлен более 5 минут, чтобы начать</string>
+    <string name="custom">Пользовательский</string>
+    <string name="custom_sound">Custom sound</string>
 </resources>

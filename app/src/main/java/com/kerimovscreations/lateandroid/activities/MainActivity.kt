@@ -14,13 +14,16 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.kerimovscreations.lateandroid.R
 import com.kerimovscreations.lateandroid.databinding.ActivityMainBinding
+import com.kerimovscreations.lateandroid.dialogs.CustomSoundsDialogFragment
 import com.kerimovscreations.lateandroid.dialogs.GuidelinesDialogFragment
 import com.kerimovscreations.lateandroid.dialogs.ReminderPickerDialogFragment
 import com.kerimovscreations.lateandroid.dialogs.SettingsDialogFragment
+import com.kerimovscreations.lateandroid.enums.SoundType
 import com.kerimovscreations.lateandroid.models.ReminderOption
 import com.kerimovscreations.lateandroid.tools.CircularSeekBar
 import com.kerimovscreations.lateandroid.tools.HelpFunctions
 import com.kerimovscreations.lateandroid.workers.NotifyWorker
+import io.realm.Realm
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -34,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        Realm.init(this)
 
         initVars()
     }
@@ -69,6 +74,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSettings.setOnClickListener {
             val fragment = SettingsDialogFragment.newInstance()
+            fragment.listener = object: SettingsDialogFragment.OnInteractionListener {
+                override fun onCustomSoundPicker() {
+                    promptCustomSoundsDialog()
+                }
+            }
+
             fragment.show(supportFragmentManager, "")
         }
 
@@ -178,6 +189,18 @@ class MainActivity : AppCompatActivity() {
                 .addTag(workTag)
                 .build()
         WorkManager.getInstance().enqueue(notificationWork)
+    }
+
+    private fun promptCustomSoundsDialog() {
+        val dialog = CustomSoundsDialogFragment.newInstance()
+
+        dialog.listener = object: CustomSoundsDialogFragment.OnInteractionListener {
+            override fun onSubmit() {
+                HelpFunctions.shared.setSoundType(this@MainActivity, SoundType.CUSTOM.value)
+            }
+        }
+
+        dialog.show(supportFragmentManager, "")
     }
 
     companion object {

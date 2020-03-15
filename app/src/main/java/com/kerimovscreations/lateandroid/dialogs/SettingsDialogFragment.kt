@@ -52,6 +52,7 @@ class SettingsDialogFragment : DialogFragment() {
         binding.languageText.text = getString(R.string.current_language)
         binding.soundTitle.text = getString(R.string.sound)
         val soundType = SoundType.values()[HelpFunctions.shared.getSoundType(this.context!!)]
+
         val resId: Int
         resId = when (soundType) {
             SoundType.MALE_NORMAL -> R.string.male
@@ -60,8 +61,9 @@ class SettingsDialogFragment : DialogFragment() {
             SoundType.FEMALE_FUNNY_1 -> R.string.female_fun_1
             SoundType.MALE_FUNNY_2 -> R.string.male_fun_2
             SoundType.FEMALE_FUNNY_2 -> R.string.female_fun_2
-            else -> R.string.male
+            SoundType.CUSTOM -> R.string.custom
         }
+
         binding.soundText.text = getString(resId)
         binding.btnSubmit.text = getString(R.string.submit)
     }
@@ -106,23 +108,34 @@ class SettingsDialogFragment : DialogFragment() {
     private fun onSound() {
         val adb = AlertDialog.Builder(this.context!!, R.style.AppThemeAlertDialog)
         val items: Array<CharSequence> = if (GlobalApplication.localeManager!!.language == "en") {
-            arrayOf(getString(R.string.male), getString(R.string.female))
+            arrayOf(getString(R.string.male), getString(R.string.female), getString(R.string.custom))
         } else {
             arrayOf(getString(R.string.male), getString(R.string.female),
+                    getString(R.string.custom),
                     getString(R.string.male_fun_1), getString(R.string.female_fun_1),
                     getString(R.string.male_fun_2), getString(R.string.female_fun_2))
         }
-        val selectedOption = intArrayOf(-1)
+        var selectedOption = -1
         val soundType = SoundType.values()[HelpFunctions.shared.getSoundType(this.context!!)]
-        selectedOption[0] = soundType.value
-        adb.setSingleChoiceItems(items, selectedOption[0]) { _: DialogInterface?, which: Int -> selectedOption[0] = which }
+        selectedOption = soundType.value
+        adb.setSingleChoiceItems(items, selectedOption) { _: DialogInterface?, which: Int -> selectedOption = which }
         adb.setPositiveButton(getString(R.string.save)) { _: DialogInterface?, _: Int ->
-            HelpFunctions.shared.setSoundType(this.context!!, selectedOption[0])
-            updateTexts()
+            if (selectedOption == SoundType.CUSTOM.value) {
+                listener?.onCustomSoundPicker()
+                dismiss()
+            } else {
+                HelpFunctions.shared.setSoundType(this.context!!, selectedOption)
+                updateTexts()
+            }
         }
         adb.setNegativeButton(getString(R.string.cancel), null)
         adb.setTitle(getString(R.string.select_sound))
         adb.show()
     }
 
+    interface OnInteractionListener {
+        fun onCustomSoundPicker()
+    }
+
+    var listener: OnInteractionListener? = null
 }

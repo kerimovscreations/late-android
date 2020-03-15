@@ -10,21 +10,20 @@
         android:paddingBottom="@dimen/medium_margin">
 
         <ImageView
-            android:id="@+id/ic_play"
+            android:id="@+id/action_ic"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/bg_play_btn"
             android:contentDescription="@string/play_icon"
-            android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_play_arrow_white_24dp" />
+            app:srcCompat="@drawable/ic_add_white_24dp" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/selector"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/edit_ic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_edit_white_24dp"
             app:thumbTint="@color/colorWhite"
             app:trackTint="@drawable/selector_switch" />
 
@@ -35,14 +34,12 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginEnd="@dimen/medium_margin"
-            android:layout_toStartOf="@id/selector"
-            android:layout_toEndOf="@id/ic_play"
+            android:layout_toStartOf="@id/edit_ic"
+            android:layout_toEndOf="@id/action_ic"
             android:fontFamily="@font/lato"
             android:text="Title"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
-
-
     </RelativeLayout>
 </layout>

@@ -121,7 +121,7 @@ class ReminderPickerDialogFragment : DialogFragment() {
             options[index].isPlaying = true
             adapter.notifyItemChanged(index)
         }
-        val resourceId = HelpFunctions.shared.getNotificationData(context, options[index].value).getInt("SOUND_ID", R.raw.en_male_mins_0_left)
+        val resourceId = HelpFunctions.shared.getNotificationData(context!!, options[index].value).getInt("SOUND_ID", R.raw.en_male_mins_0_left)
 
         mediaPlayer = MediaPlayer.create(this.context!!, resourceId)
         mediaPlayer?.setOnCompletionListener {
