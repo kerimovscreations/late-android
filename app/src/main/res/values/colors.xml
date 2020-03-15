@@ -7,4 +7,5 @@
     <color name="colorAccentAlternative2">#865FC1</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGray">#aaaaaa</color>
+    <color name="colorBlack">#000000</color>
 </resources>

@@ -47,6 +47,10 @@ class CustomSoundRVAdapter(private val mData: ArrayList<ReminderOption>) :
         holder.binding.actionIc.setOnClickListener {
             mListener?.onAction(position)
         }
+
+        holder.binding.root.setOnClickListener {
+            mListener?.onAction(position)
+        }
     }
 
     override fun getItemCount(): Int {

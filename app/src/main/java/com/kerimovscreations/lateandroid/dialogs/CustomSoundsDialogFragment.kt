@@ -50,7 +50,8 @@ class CustomSoundsDialogFragment : DialogFragment() {
         adapter = CustomSoundRVAdapter(soundList)
         adapter.setOnInteractionListener(object : CustomSoundRVAdapter.OnInteractionListener {
             override fun onAction(index: Int) {
-
+                val dialog = CustomSoundPickerDialogFragment.newInstance()
+                dialog.show(childFragmentManager, "")
             }
         })
 
