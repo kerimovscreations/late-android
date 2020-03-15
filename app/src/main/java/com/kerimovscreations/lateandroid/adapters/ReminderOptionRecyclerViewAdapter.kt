@@ -32,7 +32,7 @@ class ReminderOptionRecyclerViewAdapter(private val mContext: Context,
         val data = mData[position]
         holder.title.text = data.title
         holder.selector.isChecked = data.isSelected
-        holder.playIc.setImageDrawable(mContext.getDrawable(if (data.isPlaying) R.drawable.ic_stop_white_24dp else R.drawable.ic_play_arrow_white_24dp))
+        holder.playIc.setImageDrawable(mContext.getDrawable(if (data.isPlaying) R.drawable.ic_pause_white_24dp else R.drawable.ic_play_arrow_white_24dp))
         holder.selector.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean -> mData[position].isSelected = isChecked }
         holder.playIc.setOnClickListener {
             if (mListener != null) {

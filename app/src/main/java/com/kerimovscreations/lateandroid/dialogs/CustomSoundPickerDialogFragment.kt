@@ -1,6 +1,5 @@
 package com.kerimovscreations.lateandroid.dialogs
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +40,23 @@ class CustomSoundPickerDialogFragment : BottomSheetDialogFragment() {
             dismiss()
         }
 
+        binding.btnPickMedia.setOnClickListener {
+            dismiss()
+            listener?.onPickFile()
+        }
+
+        binding.btnRecordSound.setOnClickListener {
+            dismiss()
+            listener?.onRecordAudio()
+        }
+
         return binding.root
     }
+
+    interface OnInteractionListener {
+        fun onPickFile()
+        fun onRecordAudio()
+    }
+
+    var listener: OnInteractionListener? = null
 }

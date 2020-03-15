@@ -20,6 +20,7 @@ import com.kerimovscreations.lateandroid.dialogs.ReminderPickerDialogFragment
 import com.kerimovscreations.lateandroid.dialogs.SettingsDialogFragment
 import com.kerimovscreations.lateandroid.enums.SoundType
 import com.kerimovscreations.lateandroid.models.ReminderOption
+import com.kerimovscreations.lateandroid.tools.BaseActivity
 import com.kerimovscreations.lateandroid.tools.CircularSeekBar
 import com.kerimovscreations.lateandroid.tools.HelpFunctions
 import com.kerimovscreations.lateandroid.workers.NotifyWorker
@@ -27,7 +28,7 @@ import io.realm.Realm
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -132,7 +133,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startTimer(duration: Long) {
-        binding.btnPlay.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_stop_white_24dp, null))
+        binding.btnPlay.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_pause_white_24dp, null))
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 updateTimeText(millisUntilFinished / 1000, true)

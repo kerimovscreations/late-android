@@ -1,11 +1,22 @@
 package com.kerimovscreations.lateandroid.dialogs
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.loader.content.CursorLoader
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kerimovscreations.lateandroid.R
 import com.kerimovscreations.lateandroid.adapters.CustomSoundRVAdapter
@@ -14,13 +25,17 @@ import com.kerimovscreations.lateandroid.databinding.DialogCustomSoundsBinding
 import com.kerimovscreations.lateandroid.models.CustomSound
 import com.kerimovscreations.lateandroid.models.ReminderOption
 import io.realm.Realm
+import io.realm.kotlin.createObject
 import io.realm.kotlin.where
+
 
 class CustomSoundsDialogFragment : DialogFragment() {
 
     companion object {
-        fun newInstance() = CustomSoundsDialogFragment().apply {
-        }
+        const val RC_AUDIO_PICK = 23
+        const val RC_READ_EXTERNAL = 244
+
+        fun newInstance() = CustomSoundsDialogFragment()
     }
 
     private lateinit var binding: DialogCustomSoundsBinding
@@ -30,6 +45,11 @@ class CustomSoundsDialogFragment : DialogFragment() {
     private var soundList = arrayListOf<ReminderOption>()
 
     private val realm = Realm.getDefaultInstance()
+
+    private var pickedAudioForValue = -1
+
+    private var mediaPlayer: MediaPlayer? = null
+    private var playingIndex = -1
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -50,8 +70,15 @@ class CustomSoundsDialogFragment : DialogFragment() {
         adapter = CustomSoundRVAdapter(soundList)
         adapter.setOnInteractionListener(object : CustomSoundRVAdapter.OnInteractionListener {
             override fun onAction(index: Int) {
-                val dialog = CustomSoundPickerDialogFragment.newInstance()
-                dialog.show(childFragmentManager, "")
+                if (soundList[index].soundFile.isEmpty()) {
+                    promptSoundPickerDialog(index)
+                } else {
+                    playSound(index)
+                }
+            }
+
+            override fun onEdit(index: Int) {
+                promptSoundPickerDialog(index)
             }
         })
 
@@ -65,6 +92,21 @@ class CustomSoundsDialogFragment : DialogFragment() {
         super.onResume()
 
         updateList()
+    }
+
+    private fun promptSoundPickerDialog(index: Int) {
+        val dialog = CustomSoundPickerDialogFragment.newInstance()
+        dialog.listener = object : CustomSoundPickerDialogFragment.OnInteractionListener {
+            override fun onPickFile() {
+                pickAudioFile(index)
+            }
+
+            override fun onRecordAudio() {
+
+            }
+
+        }
+        dialog.show(childFragmentManager, "")
     }
 
     private fun updateList() {
@@ -92,6 +134,123 @@ class CustomSoundsDialogFragment : DialogFragment() {
         }
 
         adapter.notifyDataSetChanged()
+    }
+
+    private fun pickAudioFile(index: Int) {
+        val activityRef = this.activity ?: return
+
+        this.pickedAudioForValue = soundList[index].value
+
+        val videoIntent = Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
+        activityRef.startActivityForResult(Intent.createChooser(videoIntent, "Select Audio"), RC_AUDIO_PICK)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_AUDIO_PICK) {
+            if (resultCode == Activity.RESULT_OK) {
+                val uri = data?.data ?: return
+                val path2 = getAudioPath(uri) ?: return
+                if (pickedAudioForValue < 0) {
+                    return
+                }
+
+                realm.executeTransaction {
+                    val lang = GlobalApplication.localeManager!!.language
+
+                    val cachedSoundFile = realm.where<CustomSound>()
+                            .equalTo("lang", lang)
+                            .equalTo("value", pickedAudioForValue)
+                            .findFirst()
+
+                    cachedSoundFile?.let {
+                        it.soundFile = path2
+                    } ?: run {
+                        val soundObj = realm.createObject<CustomSound>()
+                        soundObj.soundFile = path2
+                        soundObj.lang = lang
+                        soundObj.value = pickedAudioForValue
+                    }
+                }
+
+                updateList()
+            }
+        }
+    }
+
+    private fun getAudioPath(uri: Uri): String? {
+        val activityRef = this.activity ?: return null
+
+        val data = arrayOf(MediaStore.Audio.Media.DATA)
+        val loader = CursorLoader(activityRef.applicationContext, uri, data, null, null, null)
+        val cursor = loader.loadInBackground() ?: return null
+
+        val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+        cursor.moveToFirst()
+        return cursor.getString(columnIndex)
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        stopSound()
+    }
+
+    private fun stopSound() {
+        mediaPlayer?.release()
+        mediaPlayer = null
+        playingIndex = -1
+    }
+
+    private fun playSound(index: Int) {
+        val activityRef = this.activity ?: return
+
+        if (!hasExternalStoragePermission(activityRef)) {
+            Toast.makeText(activityRef, "You don't have proper permission", Toast.LENGTH_SHORT).show()
+            ActivityCompat.requestPermissions(activityRef, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    RC_READ_EXTERNAL)
+            return
+        }
+
+        stopSound()
+        if (playingIndex >= 0) {
+            soundList[playingIndex].isPlaying = false
+            adapter.notifyItemChanged(playingIndex)
+            if (playingIndex == index) {
+                return
+            }
+        }
+        if (soundList[index].isPlaying) {
+            soundList[index].isPlaying = false
+            adapter.notifyItemChanged(index)
+            return
+        } else {
+            playingIndex = index
+            soundList[index].isPlaying = true
+            adapter.notifyItemChanged(index)
+        }
+
+        mediaPlayer = MediaPlayer()
+        mediaPlayer?.setDataSource(soundList[index].soundFile)
+        mediaPlayer?.prepare()
+
+        mediaPlayer?.setOnCompletionListener {
+            stopSound()
+            soundList[index].isPlaying = false
+            adapter.notifyItemChanged(index)
+            playingIndex = -1
+        }
+        mediaPlayer?.start()
+    }
+
+    private fun hasExternalStoragePermission(activity: Activity): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val result = activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+        return false
     }
 
     interface OnInteractionListener {

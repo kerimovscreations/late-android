@@ -97,10 +97,8 @@ class ReminderPickerDialogFragment : DialogFragment() {
     }
 
     private fun stopSound() {
-        if (mediaPlayer != null) {
-            mediaPlayer!!.release()
-            mediaPlayer = null
-        }
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     private fun playSound(index: Int) {

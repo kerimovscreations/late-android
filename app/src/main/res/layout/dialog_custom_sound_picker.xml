@@ -13,14 +13,12 @@
             android:layout_marginStart="@dimen/normal_margin"
             android:layout_marginTop="@dimen/normal_margin"
             android:layout_marginEnd="@dimen/normal_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:background="@drawable/bg_rounded_white"
-            android:elevation="1dp">
+            android:background="@drawable/bg_rounded_white">
 
             <TextView
                 android:id="@+id/btn_pick_media"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
@@ -39,13 +37,12 @@
             android:layout_marginStart="@dimen/normal_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginEnd="@dimen/normal_margin"
-            android:background="@drawable/bg_rounded_white"
-            android:elevation="1dp">
+            android:background="@drawable/bg_rounded_white">
 
             <TextView
                 android:id="@+id/btn_record_sound"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"

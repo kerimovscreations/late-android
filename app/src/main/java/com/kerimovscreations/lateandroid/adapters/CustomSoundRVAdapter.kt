@@ -26,7 +26,7 @@ class CustomSoundRVAdapter(private val mData: ArrayList<ReminderOption>) :
             val actionResId = if (item.soundFile.isEmpty()) {
                 R.drawable.ic_add_white_24dp
             } else if (item.isPlaying) {
-                R.drawable.ic_stop_white_24dp
+                R.drawable.ic_pause_white_24dp
             } else {
                 R.drawable.ic_play_arrow_white_24dp
             }
@@ -51,6 +51,10 @@ class CustomSoundRVAdapter(private val mData: ArrayList<ReminderOption>) :
         holder.binding.root.setOnClickListener {
             mListener?.onAction(position)
         }
+
+        holder.binding.editIc.setOnClickListener {
+            mListener?.onEdit(position)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -59,6 +63,7 @@ class CustomSoundRVAdapter(private val mData: ArrayList<ReminderOption>) :
 
     interface OnInteractionListener {
         fun onAction(index: Int)
+        fun onEdit(index: Int)
     }
 
     private var mListener: OnInteractionListener? = null
