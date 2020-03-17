@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorDarkGray"
+        tools:context="com.kerimovscreations.lateandroid.activities.AudioRecorderActivity">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/normal_margin"
+            android:fontFamily="@font/lato_black"
+            android:text="@string/record_audio"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:id="@+id/action_btn_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:clipChildren="false"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_record"
+                android:layout_width="80dp"
+                android:layout_margin="@dimen/normal_margin"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_oval_red"
+                android:padding="@dimen/normal_margin"
+                android:src="@drawable/ic_mic_white_24dp" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_play"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="@dimen/normal_margin"
+                android:background="@drawable/bg_oval_green"
+                android:padding="@dimen/normal_margin"
+                android:src="@drawable/ic_play_arrow_white_24dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/timer_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/action_btn_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/large_margin"
+            android:fontFamily="@font/lato"
+            android:text="0:00"
+            android:textColor="@color/colorWhite"
+            android:textSize="48sp" />
+
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/normal_margin"
+            android:background="@drawable/bg_rounded_transparent_white"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/lato_bold"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/btn_select"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_above="@id/btn_cancel"
+            android:layout_marginStart="@dimen/normal_margin"
+            android:layout_marginEnd="@dimen/normal_margin"
+            android:background="@drawable/bg_rounded_transparent_white"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/lato_bold"
+            android:gravity="center"
+            android:text="@string/select"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp" />
+    </RelativeLayout>
+</layout>

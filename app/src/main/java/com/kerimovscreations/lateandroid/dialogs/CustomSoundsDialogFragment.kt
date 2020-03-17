@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.loader.content.CursorLoader
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kerimovscreations.lateandroid.R
+import com.kerimovscreations.lateandroid.activities.AudioRecorderActivity
 import com.kerimovscreations.lateandroid.adapters.CustomSoundRVAdapter
 import com.kerimovscreations.lateandroid.application.GlobalApplication
 import com.kerimovscreations.lateandroid.databinding.DialogCustomSoundsBinding
@@ -33,7 +34,8 @@ class CustomSoundsDialogFragment : DialogFragment() {
 
     companion object {
         const val RC_AUDIO_PICK = 23
-        const val RC_READ_EXTERNAL = 244
+        const val RC_RECORD_AUDIO = 24
+        const val RC_READ_EXTERNAL = 25
 
         fun newInstance() = CustomSoundsDialogFragment()
     }
@@ -102,7 +104,7 @@ class CustomSoundsDialogFragment : DialogFragment() {
             }
 
             override fun onRecordAudio() {
-
+                toRecordAudio(index)
             }
 
         }
@@ -178,6 +180,33 @@ class CustomSoundsDialogFragment : DialogFragment() {
 
                 updateList()
             }
+        } else if (requestCode == RC_RECORD_AUDIO) {
+            if (resultCode == Activity.RESULT_OK) {
+                val path = data?.getStringExtra(AudioRecorderActivity.EXTRA_AUDIO_PATH) ?: return
+                if (pickedAudioForValue < 0) {
+                    return
+                }
+
+                realm.executeTransaction {
+                    val lang = GlobalApplication.localeManager!!.language
+
+                    val cachedSoundFile = realm.where<CustomSound>()
+                            .equalTo("lang", lang)
+                            .equalTo("value", pickedAudioForValue)
+                            .findFirst()
+
+                    cachedSoundFile?.let {
+                        it.soundFile = path
+                    } ?: run {
+                        val soundObj = realm.createObject<CustomSound>()
+                        soundObj.soundFile = path
+                        soundObj.lang = lang
+                        soundObj.value = pickedAudioForValue
+                    }
+                }
+
+                updateList()
+            }
         }
     }
 
@@ -208,7 +237,7 @@ class CustomSoundsDialogFragment : DialogFragment() {
         val activityRef = this.activity ?: return
 
         if (!hasExternalStoragePermission(activityRef)) {
-            Toast.makeText(activityRef, "You don't have proper permission", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activityRef, getString(R.string.you_don_t_have_proper_permission), Toast.LENGTH_SHORT).show()
             ActivityCompat.requestPermissions(activityRef, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                     RC_READ_EXTERNAL)
             return
@@ -247,10 +276,19 @@ class CustomSoundsDialogFragment : DialogFragment() {
 
     private fun hasExternalStoragePermission(activity: Activity): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val result = activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            val result = activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
             return result == PackageManager.PERMISSION_GRANTED;
         }
         return false
+    }
+
+    private fun toRecordAudio(index: Int) {
+        val activityRef = this.activity ?: return
+
+        this.pickedAudioForValue = soundList[index].value
+
+        val intent = Intent(activityRef, AudioRecorderActivity::class.java)
+        activityRef.startActivityForResult(intent, RC_RECORD_AUDIO)
     }
 
     interface OnInteractionListener {

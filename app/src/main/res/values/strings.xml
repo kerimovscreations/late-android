@@ -87,6 +87,7 @@ After selecting the meeting duration, you need to activate the periods to remind
     <string name="custom_sound">Custom sound</string>
     <string name="select_from_media">Select from media</string>
     <string name="record_audio">Record audio</string>
+    <string name="you_don_t_have_proper_permission">You don\'t have proper permission</string>
 
     <string-array name="hours_array" translatable="false">
         <item>0</item>
