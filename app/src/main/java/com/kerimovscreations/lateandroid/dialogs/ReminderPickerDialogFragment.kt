@@ -9,9 +9,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.kerimovscreations.lateandroid.R
 import com.kerimovscreations.lateandroid.adapters.ReminderOptionRecyclerViewAdapter
+import com.kerimovscreations.lateandroid.application.GlobalApplication
 import com.kerimovscreations.lateandroid.databinding.DialogReminderPickerBinding
+import com.kerimovscreations.lateandroid.enums.SoundType
+import com.kerimovscreations.lateandroid.models.CustomSound
 import com.kerimovscreations.lateandroid.models.ReminderOption
 import com.kerimovscreations.lateandroid.tools.HelpFunctions
+import io.realm.Realm
+import io.realm.Sort
+import io.realm.kotlin.where
 import java.util.*
 
 class ReminderPickerDialogFragment : DialogFragment() {
@@ -33,6 +39,8 @@ class ReminderPickerDialogFragment : DialogFragment() {
     private lateinit var adapter: ReminderOptionRecyclerViewAdapter
     private var playingIndex = -1
 
+    private val realm: Realm = Realm.getDefaultInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,25 +54,73 @@ class ReminderPickerDialogFragment : DialogFragment() {
         binding =
                 DataBindingUtil.inflate(inflater, R.layout.dialog_reminder_picker, container, false)
 
-        options.add(ReminderOption(getString(R.string.mins_0), 0))
+        val soundType = SoundType.values()[HelpFunctions.shared.getSoundType(context!!)]
 
-        if (minutes > 5) {
-            options.add(ReminderOption(getString(R.string.mins_5), 5))
-        }
-        if (minutes > 10) {
-            options.add(ReminderOption(getString(R.string.mins_10), 10))
-        }
-        if (minutes > 15) {
-            options.add(ReminderOption(getString(R.string.mins_15), 15))
-        }
-        if (minutes > 20) {
-            options.add(ReminderOption(getString(R.string.mins_20), 20))
-        }
-        if (minutes > 30) {
-            options.add(ReminderOption(getString(R.string.mins_30), 30))
-        }
-        if (minutes > 60) {
-            options.add(ReminderOption(getString(R.string.mins_60), 60))
+        if (soundType == SoundType.CUSTOM) {
+            val language = GlobalApplication.localeManager!!.language
+            val customSounds = realm.where<CustomSound>()
+                    .equalTo("lang", language)
+                    .sort("value", Sort.ASCENDING)
+                    .findAll()
+
+            customSounds.forEach {
+                when (it.value) {
+                    0 -> {
+                        options.add(ReminderOption(getString(R.string.mins_0), 0))
+                    }
+                    5 -> {
+                        if (minutes > 5) {
+                            options.add(ReminderOption(getString(R.string.mins_5), 5))
+                        }
+                    }
+                    10 -> {
+                        if (minutes > 10) {
+                            options.add(ReminderOption(getString(R.string.mins_10), 10))
+                        }
+                    }
+                    15 -> {
+                        if (minutes > 15) {
+                            options.add(ReminderOption(getString(R.string.mins_15), 15))
+                        }
+                    }
+                    20 -> {
+                        if (minutes > 20) {
+                            options.add(ReminderOption(getString(R.string.mins_20), 20))
+                        }
+                    }
+                    30 -> {
+                        if (minutes > 30) {
+                            options.add(ReminderOption(getString(R.string.mins_30), 30))
+                        }
+                    }
+                    60 -> {
+                        if (minutes > 60) {
+                            options.add(ReminderOption(getString(R.string.mins_60), 60))
+                        }
+                    }
+                }
+            }
+        } else {
+            options.add(ReminderOption(getString(R.string.mins_0), 0))
+
+            if (minutes > 5) {
+                options.add(ReminderOption(getString(R.string.mins_5), 5))
+            }
+            if (minutes > 10) {
+                options.add(ReminderOption(getString(R.string.mins_10), 10))
+            }
+            if (minutes > 15) {
+                options.add(ReminderOption(getString(R.string.mins_15), 15))
+            }
+            if (minutes > 20) {
+                options.add(ReminderOption(getString(R.string.mins_20), 20))
+            }
+            if (minutes > 30) {
+                options.add(ReminderOption(getString(R.string.mins_30), 30))
+            }
+            if (minutes > 60) {
+                options.add(ReminderOption(getString(R.string.mins_60), 60))
+            }
         }
 
         adapter = ReminderOptionRecyclerViewAdapter(this.context!!, options)
@@ -119,16 +175,39 @@ class ReminderPickerDialogFragment : DialogFragment() {
             options[index].isPlaying = true
             adapter.notifyItemChanged(index)
         }
-        val resourceId = HelpFunctions.shared.getNotificationData(context!!, options[index].value).getInt("SOUND_ID", R.raw.en_male_mins_0_left)
 
-        mediaPlayer = MediaPlayer.create(this.context!!, resourceId)
-        mediaPlayer?.setOnCompletionListener {
-            stopSound()
-            options[index].isPlaying = false
-            adapter.notifyItemChanged(index)
-            playingIndex = -1
+        val soundType = SoundType.values()[HelpFunctions.shared.getSoundType(context!!)]
+
+        if (soundType == SoundType.CUSTOM) {
+            val language = GlobalApplication.localeManager!!.language
+            val customSounds = realm.where<CustomSound>()
+                    .equalTo("lang", language)
+                    .equalTo("value", options[index].value)
+                    .findFirst() ?: return
+
+            mediaPlayer = MediaPlayer()
+            mediaPlayer?.setDataSource(customSounds.soundFile)
+            mediaPlayer?.prepare()
+
+            mediaPlayer?.setOnCompletionListener {
+                stopSound()
+                options[index].isPlaying = false
+                adapter.notifyItemChanged(index)
+                playingIndex = -1
+            }
+            mediaPlayer?.start()
+        } else {
+            val resourceId = HelpFunctions.shared.getNotificationData(context!!, options[index].value).getInt("SOUND_ID", R.raw.en_male_mins_0_left)
+
+            mediaPlayer = MediaPlayer.create(this.context!!, resourceId)
+            mediaPlayer?.setOnCompletionListener {
+                stopSound()
+                options[index].isPlaying = false
+                adapter.notifyItemChanged(index)
+                playingIndex = -1
+            }
+            mediaPlayer?.start()
         }
-        mediaPlayer?.start()
     }
 
     interface OnInteractionListener {

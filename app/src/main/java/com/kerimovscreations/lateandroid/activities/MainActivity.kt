@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.work.OneTimeWorkRequest
@@ -75,7 +74,7 @@ class MainActivity : BaseActivity() {
 
         binding.btnSettings.setOnClickListener {
             val fragment = SettingsDialogFragment.newInstance()
-            fragment.listener = object: SettingsDialogFragment.OnInteractionListener {
+            fragment.listener = object : SettingsDialogFragment.OnInteractionListener {
                 override fun onCustomSoundPicker() {
                     promptCustomSoundsDialog()
                 }
@@ -98,7 +97,6 @@ class MainActivity : BaseActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: CircularSeekBar?) {
-
             }
         })
     }
@@ -134,6 +132,7 @@ class MainActivity : BaseActivity() {
 
     private fun startTimer(duration: Long) {
         binding.btnPlay.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_pause_white_24dp, null))
+        binding.circularSeekBar.isTouchEnabled = false
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 updateTimeText(millisUntilFinished / 1000, true)
@@ -160,13 +159,14 @@ class MainActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     fun stopTimer() {
-        timer!!.cancel()
+        timer?.cancel()
         timer = null
         binding.btnPlay.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_play_arrow_white_24dp, null))
         binding.timerTimeMin.text = "0 00"
         binding.timerTimeSec.text = "00"
         binding.circularSeekBar.progress = 0
         HelpFunctions.shared.setTimerStartTimestamp(this, 0)
+        binding.circularSeekBar.isTouchEnabled = true
     }
 
     private fun setReminders(duration: Long, options: ArrayList<ReminderOption>) {
@@ -195,7 +195,7 @@ class MainActivity : BaseActivity() {
     private fun promptCustomSoundsDialog() {
         val dialog = CustomSoundsDialogFragment.newInstance()
 
-        dialog.listener = object: CustomSoundsDialogFragment.OnInteractionListener {
+        dialog.listener = object : CustomSoundsDialogFragment.OnInteractionListener {
             override fun onSubmit() {
                 HelpFunctions.shared.setSoundType(this@MainActivity, SoundType.CUSTOM.value)
             }

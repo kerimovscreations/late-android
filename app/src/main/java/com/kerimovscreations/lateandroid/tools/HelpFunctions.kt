@@ -6,6 +6,9 @@ import androidx.work.Data
 import com.kerimovscreations.lateandroid.R
 import com.kerimovscreations.lateandroid.application.GlobalApplication
 import com.kerimovscreations.lateandroid.enums.SoundType
+import com.kerimovscreations.lateandroid.models.CustomSound
+import io.realm.Realm
+import io.realm.kotlin.where
 import java.sql.Timestamp
 import java.util.*
 
@@ -81,162 +84,193 @@ class HelpFunctions private constructor() {
     }
 
     fun getNotificationData(context: Context, value: Int): Data {
-        var resourceId = R.raw.en_male_mins_0_left
+        var resourceId = -1
+        var soundUrl = ""
+        val realm: Realm = Realm.getDefaultInstance()
+
         var titleId = R.string.mins_0_left
         val language = GlobalApplication.localeManager!!.language
         val soundType = SoundType.values()[getSoundType(context)]
-        when (value) {
-            0 -> {
-                titleId = R.string.mins_0_left
-                if (language == "en") {
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.en_male_mins_0_left
-                        SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_0_left
-                        else -> R.raw.en_male_mins_0_left
-                    }
-                } else {
-                    // TODO: Change custom selection
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.ru_male_mins_0_left
-                        SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_0_left
-                        SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_0_left
-                        SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_0_left
-                        SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_0_left
-                        SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_0_left
-                        SoundType.CUSTOM -> R.raw.ru_female_fun_1_mins_0_left
-                    }
+
+        if (soundType == SoundType.CUSTOM) {
+            soundUrl = realm.where<CustomSound>()
+                    .equalTo("lang", language)
+                    .equalTo("value", value)
+                    .findFirst()?.soundFile ?: ""
+
+            when (value) {
+                0 -> {
+                    titleId = R.string.mins_0_left
+                }
+                5 -> {
+                    titleId = R.string.mins_5_left
+                }
+                10 -> {
+                    titleId = R.string.mins_10_left
+                }
+                15 -> {
+                    titleId = R.string.mins_15_left
+                }
+                20 -> {
+                    titleId = R.string.mins_20_left
+                }
+                30 -> {
+                    titleId = R.string.mins_30_left
+                }
+                60 -> {
+                    titleId = R.string.mins_60_left
                 }
             }
-            5 -> {
-                titleId = R.string.mins_5_left
-                if (language == "en") {
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.en_male_mins_5_left
-                        SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_5_left
-                        else -> R.raw.en_male_mins_5_left
-                    }
-                } else {
-                    // TODO: Change custom selection
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.ru_male_mins_5_left
-                        SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_5_left
-                        SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_5_left
-                        SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_5_left
-                        SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_5_left
-                        SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_5_left
-                        SoundType.CUSTOM -> R.raw.ru_female_fun_1_mins_5_left
-                    }
-                }
-            }
-            10 -> {
-                titleId = R.string.mins_10_left
-                if (language == "en") {
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.en_male_mins_10_left
-                        SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_10_left
-                        else -> R.raw.en_male_mins_10_left
-                    }
-                } else {
-                    // TODO: Change custom selection
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.ru_male_mins_10_left
-                        SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_10_left
-                        SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_10_left
-                        SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_10_left
-                        SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_10_left
-                        SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_10_left
-                        SoundType.CUSTOM -> R.raw.ru_female_fun_1_mins_10_left
+        } else {
+            when (value) {
+                0 -> {
+                    titleId = R.string.mins_0_left
+                    if (language == "en") {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.en_male_mins_0_left
+                            SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_0_left
+                            else -> R.raw.en_male_mins_0_left
+                        }
+                    } else {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.ru_male_mins_0_left
+                            SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_0_left
+                            SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_0_left
+                            SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_0_left
+                            SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_0_left
+                            SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_0_left
+                            else -> R.raw.ru_male_mins_0_left
+                        }
                     }
                 }
-            }
-            15 -> {
-                titleId = R.string.mins_15_left
-                if (language == "en") {
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.en_male_mins_15_left
-                        SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_15_left
-                        else -> R.raw.en_male_mins_15_left
-                    }
-                } else {
-                    // TODO: Change custom selection
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.ru_male_mins_15_left
-                        SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_15_left
-                        SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_15_left
-                        SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_15_left
-                        SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_15_left
-                        SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_15_left
-                        SoundType.CUSTOM -> R.raw.ru_female_fun_1_mins_15_left
-                    }
-                }
-            }
-            20 -> {
-                titleId = R.string.mins_20_left
-                if (language == "en") {
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.en_male_mins_20_left
-                        SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_20_left
-                        else -> R.raw.en_male_mins_20_left
-                    }
-                } else {
-                    // TODO: Change custom selection
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.ru_male_mins_20_left
-                        SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_20_left
-                        SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_20_left
-                        SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_20_left
-                        SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_20_left
-                        SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_20_left
-                        SoundType.CUSTOM -> R.raw.ru_female_fun_1_mins_20_left
+                5 -> {
+                    titleId = R.string.mins_5_left
+                    if (language == "en") {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.en_male_mins_5_left
+                            SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_5_left
+                            else -> R.raw.en_male_mins_5_left
+                        }
+                    } else {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.ru_male_mins_5_left
+                            SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_5_left
+                            SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_5_left
+                            SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_5_left
+                            SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_5_left
+                            SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_5_left
+                            else -> R.raw.ru_male_mins_5_left
+                        }
                     }
                 }
-            }
-            30 -> {
-                titleId = R.string.mins_30_left
-                if (language == "en") {
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.en_male_mins_30_left
-                        SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_30_left
-                        else -> R.raw.en_male_mins_30_left
-                    }
-                } else {
-                    // TODO: Change custom selection
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.ru_male_mins_30_left
-                        SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_30_left
-                        SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_30_left
-                        SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_30_left
-                        SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_30_left
-                        SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_30_left
-                        SoundType.CUSTOM -> R.raw.ru_female_fun_1_mins_30_left
+                10 -> {
+                    titleId = R.string.mins_10_left
+                    if (language == "en") {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.en_male_mins_10_left
+                            SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_10_left
+                            else -> R.raw.en_male_mins_10_left
+                        }
+                    } else {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.ru_male_mins_10_left
+                            SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_10_left
+                            SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_10_left
+                            SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_10_left
+                            SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_10_left
+                            SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_10_left
+                            else -> R.raw.ru_male_mins_10_left
+                        }
                     }
                 }
-            }
-            60 -> {
-                titleId = R.string.mins_60_left
-                if (language == "en") {
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.en_male_mins_60_left
-                        SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_60_left
-                        else -> R.raw.en_male_mins_60_left
+                15 -> {
+                    titleId = R.string.mins_15_left
+                    if (language == "en") {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.en_male_mins_15_left
+                            SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_15_left
+                            else -> R.raw.en_male_mins_15_left
+                        }
+                    } else {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.ru_male_mins_15_left
+                            SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_15_left
+                            SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_15_left
+                            SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_15_left
+                            SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_15_left
+                            SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_15_left
+                            else -> R.raw.ru_male_mins_15_left
+                        }
                     }
-                } else {
-                    // TODO: Change custom selection
-                    resourceId = when (soundType) {
-                        SoundType.MALE_NORMAL -> R.raw.ru_male_mins_60_left
-                        SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_60_left
-                        SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_60_left
-                        SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_60_left
-                        SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_60_left
-                        SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_60_left
-                        SoundType.CUSTOM -> R.raw.ru_female_fun_1_mins_60_left
+                }
+                20 -> {
+                    titleId = R.string.mins_20_left
+                    if (language == "en") {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.en_male_mins_20_left
+                            SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_20_left
+                            else -> R.raw.en_male_mins_20_left
+                        }
+                    } else {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.ru_male_mins_20_left
+                            SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_20_left
+                            SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_20_left
+                            SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_20_left
+                            SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_20_left
+                            SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_20_left
+                            else -> R.raw.ru_male_mins_20_left
+                        }
+                    }
+                }
+                30 -> {
+                    titleId = R.string.mins_30_left
+                    if (language == "en") {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.en_male_mins_30_left
+                            SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_30_left
+                            else -> R.raw.en_male_mins_30_left
+                        }
+                    } else {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.ru_male_mins_30_left
+                            SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_30_left
+                            SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_30_left
+                            SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_30_left
+                            SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_30_left
+                            SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_30_left
+                            else -> R.raw.ru_male_mins_30_left
+                        }
+                    }
+                }
+                60 -> {
+                    titleId = R.string.mins_60_left
+                    if (language == "en") {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.en_male_mins_60_left
+                            SoundType.FEMALE_NORMAL -> R.raw.en_female_mins_60_left
+                            else -> R.raw.en_male_mins_60_left
+                        }
+                    } else {
+                        resourceId = when (soundType) {
+                            SoundType.MALE_NORMAL -> R.raw.ru_male_mins_60_left
+                            SoundType.FEMALE_NORMAL -> R.raw.ru_female_mins_60_left
+                            SoundType.MALE_FUNNY_1 -> R.raw.ru_male_fun_1_mins_60_left
+                            SoundType.MALE_FUNNY_2 -> R.raw.ru_male_fun_2_mins_60_left
+                            SoundType.FEMALE_FUNNY_1 -> R.raw.ru_female_fun_1_mins_60_left
+                            SoundType.FEMALE_FUNNY_2 -> R.raw.ru_female_fun_1_mins_60_left
+                            else -> R.raw.ru_male_mins_60_left
+                        }
                     }
                 }
             }
         }
+
+
         return Data.Builder()
                 .putString("TITLE", context.getString(titleId))
                 .putInt("SOUND_ID", resourceId)
+                .putString("SOUND_URL", soundUrl)
                 .build()
     }
 

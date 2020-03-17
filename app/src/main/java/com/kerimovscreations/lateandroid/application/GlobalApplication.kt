@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
 import com.kerimovscreations.lateandroid.tools.LocaleHelper
-import io.realm.Realm
 
 class GlobalApplication : Application() {
 

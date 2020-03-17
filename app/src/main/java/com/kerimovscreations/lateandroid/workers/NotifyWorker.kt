@@ -8,6 +8,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.kerimovscreations.lateandroid.R
@@ -25,11 +26,20 @@ class NotifyWorker(context: Context, params: WorkerParameters) : Worker(context,
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
         val eventId = inputData.getInt("EVENT_ID", 1)
-        val soundId = inputData.getInt("SOUND_ID", R.raw.en_male_mins_0_left)
-        val sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.packageName + "/" + soundId)
+
+        val customSoundUrl = (inputData.getString("SOUND_URL") ?: "")
+
+        val sound = if (customSoundUrl.isNotEmpty()) {
+            Uri.parse(customSoundUrl)
+        } else {
+            val soundId = inputData.getInt("SOUND_ID", R.raw.en_male_mins_0_left)
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.packageName + "/" + soundId)
+        }
+
         val title = inputData.getString("TITLE")
         val mBuilder = NotificationCompat.Builder(applicationContext, "B")
                 .setSmallIcon(R.drawable.ic_stat_icon)
+                .setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                 .setSound(null)
                 .setContentTitle("LATE")
                 .setContentText(title)
