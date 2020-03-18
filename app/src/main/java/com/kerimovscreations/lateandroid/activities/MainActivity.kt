@@ -131,7 +131,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun startTimer(duration: Long) {
-        binding.btnPlay.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_pause_white_24dp, null))
+        binding.btnPlay.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_stop_white_24dp, null))
         binding.circularSeekBar.isTouchEnabled = false
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {

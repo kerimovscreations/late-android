@@ -87,6 +87,12 @@ class CustomSoundsDialogFragment : DialogFragment() {
         binding.rvOptions.layoutManager = LinearLayoutManager(this.context!!)
         binding.rvOptions.adapter = adapter
 
+        if (!hasExternalStoragePermission(this.activity!!)) {
+            Toast.makeText(this.activity!!, getString(R.string.you_don_t_have_proper_permission), Toast.LENGTH_SHORT).show()
+            ActivityCompat.requestPermissions(this.activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    RC_READ_EXTERNAL)
+        }
+
         return binding.root
     }
 
@@ -223,14 +229,13 @@ class CustomSoundsDialogFragment : DialogFragment() {
     }
 
     override fun dismiss() {
-        super.dismiss()
         stopSound()
+        super.dismiss()
     }
 
     private fun stopSound() {
         mediaPlayer?.release()
         mediaPlayer = null
-        playingIndex = -1
     }
 
     private fun playSound(index: Int) {

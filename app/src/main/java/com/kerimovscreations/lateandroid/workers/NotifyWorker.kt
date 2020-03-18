@@ -1,11 +1,15 @@
 package com.kerimovscreations.lateandroid.workers
 
+import android.Manifest
+import android.app.Activity
 import android.app.PendingIntent
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -30,7 +34,12 @@ class NotifyWorker(context: Context, params: WorkerParameters) : Worker(context,
         val customSoundUrl = (inputData.getString("SOUND_URL") ?: "")
 
         val sound = if (customSoundUrl.isNotEmpty()) {
-            Uri.parse(customSoundUrl)
+            if (hasExternalStoragePermission(applicationContext)) {
+                Uri.parse(customSoundUrl)
+            } else {
+                val soundId = R.raw.en_male_mins_0_left
+                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.packageName + "/" + soundId)
+            }
         } else {
             val soundId = inputData.getInt("SOUND_ID", R.raw.en_male_mins_0_left)
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.packageName + "/" + soundId)
@@ -54,5 +63,13 @@ class NotifyWorker(context: Context, params: WorkerParameters) : Worker(context,
             e.printStackTrace()
         }
         notificationManager.notify(eventId, mBuilder.build())
+    }
+
+    private fun hasExternalStoragePermission(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val result = context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+        return false
     }
 }

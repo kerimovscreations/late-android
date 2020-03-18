@@ -148,8 +148,8 @@ class ReminderPickerDialogFragment : DialogFragment() {
     }
 
     override fun dismiss() {
-        super.dismiss()
         stopSound()
+        super.dismiss()
     }
 
     private fun stopSound() {
