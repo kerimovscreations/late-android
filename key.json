@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pc-api-8396991817314873312-807",
+  "private_key_id": "b997fe8fa106dada816abc9ffd4ca51addcc2bc7",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC1+HrF/kv3aFiW\nLdrS7xeFv0coiKbQTR3iAKqwWw40RPg1HwrkxXJXvqDMIWNhnwZD3wB9mlCf9XVX\nROYC6WedkiUWrH6ic8r1WTSuz+8Vvuy/phlCYEVJtcBfFJnDe+///0/s1r/miTZ0\nQrxZ7jiYhZGl2KDQU5YS350HeBDKGluwoel7bXtU6HUF0obVY3tQZGf6dxpGOCZ2\nFvgZ7I+0j1BflGzN1JLlqDCEqTzu/QCFx11FYKo3QMNXrAtoQhQcBFWiUvebPkcD\nG41Dqa45jZ1Ts/n9L6a6vuTBS4l3FqubOG+z9ffKi5pJf39cC15DaFxDbgSS77/+\nm0ecpNS3AgMBAAECggEALvINXoIWAByD6i6nSw7SvzcTORJUEt4qTPGGF5xOJE78\nx9ub2FxV/OwZmMAuXvODTsQ74KuMjE/rd1m3i13C1QRsnBZhTzDXVgevD0BmunH4\nqxLDZnvmtDb3C7CJYMTbLGymJoBanrOcgE7tP7g1Eqg25JXoGwbNa04UOWaQ0kqd\nzMg4d/rU3Slycm3SYS9NhFydFk9RU28pXSbdusjrWogsHTsFuwsdQMoQ+UmRqoSe\n3nq6kEr5VuBQrxDlqbgAJ9UKso7ldALendnAvNnRYvazCZzM2TXPyP7bWThSwDgi\n9BHYqI9Qj4YEPllCvXzPOeBFxm/GnhdCL9JES3nnFQKBgQDqD1dg01uGy4nDLdZd\n91QNOYa9TSxsz3CZNTebvywc+4R6v5RHkr8LmrQHZvNkhu/Wx0DbULgDuHhwg933\nWD/rJH+AtFgJhWM02mzZKhzDhi0ktQbmVcdR08tj7ZqMF0mPrH2cObG+XreLYxeK\nxbesjY/GkweG2HzWnck6NzZK7QKBgQDHBysgjNOZOFZGSExlU4AT3ECVwrALwnaI\nwmEdenSHK/ilzY7zSVl2bUv303jq9e9zPPfapR8XKcrlijetYXNVvADcS1bntlrx\nr20QphzvtzqePbL3oJ1CAFNhNf45ufgERXJPtnAlqhSMUwOPbr8/HH0CJmMwhIpc\ndS+nTY0VswKBgF1suDTmyF66eYeVkT46jaslrhl7Z2MbPdd5fXPGT+ZVoqCYPah/\n84+/NWLK/hW/IpZ5O/MOehTKGhDXIc8rw3+pNtd5pLZQLrQXB2F7RLXqpbREKbfg\nv0lzH3kIiyql1O/rKswj30WcaujRKcFzgAf5DU12vIdffBzyKDL7fMlVAoGAaABA\n8wNj1t7vhk5lTVVyye3/+cIASETXt+MK6GKC3deGWO2vU0Xy78VxOxFQUEcvVuJ3\nCdPbCTmXgpbVPU58/EH/mR3tTaumnkBzF44V9NWkVegbyvYs9r5A071pGTUqeuDn\nOOw2chgMIL+ITr0qRopWcHcqwcGgo2vA+QW3Qa0CgYEAo1S/VKoU1/ejNbnCN3KK\nAPgRZdffH6ApmeQQiuY/Y5ZapR1D1ahThpb3hZN7o+BedF6IsortpNX5s2pLnbqK\nT8g3zD42lUlfpjr6V2W7Sqs31L46gggz3GP848qBlt3VT7TbJO6HE+FKTsbiFIja\np6NKNG5ZnYELtEZ75AcmGQE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "fastlane-play-store@pc-api-8396991817314873312-807.iam.gserviceaccount.com",
+  "client_id": "100352947597760778444",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fastlane-play-store%40pc-api-8396991817314873312-807.iam.gserviceaccount.com"
+}

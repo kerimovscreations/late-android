@@ -1,0 +1,1 @@
+Late - a mobile application beeps and voice/text alerts to a predetermined point in time as a reminder of an important event or meeting. The application allows the user to distribute events into relevant categories, according to the importance and reminder intervals.
