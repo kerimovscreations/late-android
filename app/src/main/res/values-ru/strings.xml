@@ -75,5 +75,8 @@
     <string name="custom_sound">Пользовательский звук</string>
     <string name="select_from_media">Выбрать из библиотеки</string>
     <string name="record_audio">Запись аудио</string>
-    <string name="you_don_t_have_proper_permission">You don\'t have proper permission</string>
+    <string name="you_don_t_have_proper_permission">У Вас нет необходимых разрешений</string>
+    <string name="warning_no_permission">Вам нужно разрешить уведомления, чтобы получать оповещения</string>
+    <string name="error_playing_sound">Unable to play the sound</string>
+
 </resources>

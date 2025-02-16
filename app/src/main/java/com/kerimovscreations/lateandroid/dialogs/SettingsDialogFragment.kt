@@ -23,11 +23,11 @@ class SettingsDialogFragment : DialogFragment() {
     private lateinit var binding: DialogSettingsBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding =
-                DataBindingUtil.inflate(inflater, R.layout.dialog_settings, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.dialog_settings, container, false)
 
         binding.btnSubmit.setOnClickListener {
             dismiss()
@@ -49,19 +49,23 @@ class SettingsDialogFragment : DialogFragment() {
     private fun updateTexts() {
         binding.title.text = getString(R.string.settings)
         binding.languageTitle.text = getString(R.string.language)
-        binding.languageText.text = getString(R.string.current_language)
+        binding.languageText.text = when (GlobalApplication.localeManager!!.language) {
+            "en" -> "English"
+            "ru" -> "Русский"
+            else -> "English"
+        }
         binding.soundTitle.text = getString(R.string.sound)
-        val soundType = SoundType.values()[HelpFunctions.shared.getSoundType(this.context!!)]
-
-        val resId: Int
-        resId = when (soundType) {
+        val soundType =
+            SoundType.entries.getOrElse(
+                HelpFunctions.shared.getSoundType(this.requireContext()),
+                { SoundType.MALE_NORMAL })
+        val resId: Int = when (soundType) {
             SoundType.MALE_NORMAL -> R.string.male
             SoundType.FEMALE_NORMAL -> R.string.female
             SoundType.MALE_FUNNY_1 -> R.string.male_fun_1
             SoundType.FEMALE_FUNNY_1 -> R.string.female_fun_1
             SoundType.MALE_FUNNY_2 -> R.string.male_fun_2
             SoundType.FEMALE_FUNNY_2 -> R.string.female_fun_2
-            SoundType.CUSTOM -> R.string.custom
         }
 
         binding.soundText.text = getString(resId)
@@ -69,33 +73,41 @@ class SettingsDialogFragment : DialogFragment() {
     }
 
     private fun onLanguage() {
-        val adb = AlertDialog.Builder(this.context!!, R.style.AppThemeAlertDialog)
+        val adb = AlertDialog.Builder(this.requireContext(), R.style.AppThemeAlertDialog)
         val items = arrayOf<CharSequence>("English", "Русский")
-        val selectedOption = intArrayOf(-1)
-        when (GlobalApplication.localeManager!!.language) {
+        var selectedOption = when (GlobalApplication.localeManager!!.language) {
             "en" -> {
-                selectedOption[0] = 0
+                0
             }
+
             "ru" -> {
-                selectedOption[0] = 1
+                1
             }
+
             else -> {
-                selectedOption[0] = 0
+                0
             }
         }
-        adb.setSingleChoiceItems(items, selectedOption[0]) { _: DialogInterface?, which: Int -> selectedOption[0] = which }
+        adb.setSingleChoiceItems(
+            items,
+            selectedOption
+        ) { _: DialogInterface?, which: Int -> selectedOption = which }
         adb.setPositiveButton(getString(R.string.save)) { _: DialogInterface?, _: Int ->
-            when (selectedOption[0]) {
+            when (selectedOption) {
                 0 -> {
-                    GlobalApplication.localeManager!!.setNewLocale(this.context!!, "en")
-                    HelpFunctions.shared.setUserLanguage(this.context!!, "en")
+                    GlobalApplication.localeManager!!.setNewLocale(this.requireContext(), "en")
+                    HelpFunctions.shared.setUserLanguage(this.requireContext(), "en")
+                    HelpFunctions.shared.setSoundType(this.requireContext(), SoundType.MALE_NORMAL)
                     updateTexts()
                 }
+
                 1 -> {
-                    GlobalApplication.localeManager!!.setNewLocale(this.context!!, "ru")
-                    HelpFunctions.shared.setUserLanguage(this.context!!, "ru")
+                    GlobalApplication.localeManager!!.setNewLocale(this.requireContext(), "ru")
+                    HelpFunctions.shared.setUserLanguage(this.requireContext(), "ru")
+                    HelpFunctions.shared.setSoundType(this.requireContext(), SoundType.MALE_NORMAL)
                     updateTexts()
                 }
+
                 else -> {
                 }
             }
@@ -106,36 +118,41 @@ class SettingsDialogFragment : DialogFragment() {
     }
 
     private fun onSound() {
-        val adb = AlertDialog.Builder(this.context!!, R.style.AppThemeAlertDialog)
-        val items: Array<CharSequence> = if (GlobalApplication.localeManager!!.language == "en") {
-            arrayOf(getString(R.string.male), getString(R.string.female), getString(R.string.custom))
+        val adb = AlertDialog.Builder(this.requireContext(), R.style.AppThemeAlertDialog)
+        val language = GlobalApplication.localeManager!!.language
+        val items: Array<Pair<SoundType, CharSequence>> = if (language == "en") {
+            arrayOf(
+                Pair(SoundType.MALE_NORMAL, getString(R.string.male)),
+                Pair(SoundType.FEMALE_NORMAL, getString(R.string.female)),
+            )
         } else {
-            arrayOf(getString(R.string.male), getString(R.string.female),
-                    getString(R.string.custom),
-                    getString(R.string.male_fun_1), getString(R.string.female_fun_1),
-                    getString(R.string.male_fun_2), getString(R.string.female_fun_2))
+            arrayOf(
+                Pair(SoundType.MALE_NORMAL, getString(R.string.male)),
+                Pair(SoundType.FEMALE_NORMAL, getString(R.string.female)),
+                Pair(SoundType.MALE_FUNNY_1, getString(R.string.male_fun_1)),
+                Pair(SoundType.FEMALE_FUNNY_1, getString(R.string.female_fun_1)),
+                Pair(SoundType.MALE_FUNNY_2, getString(R.string.male_fun_2)),
+                Pair(SoundType.FEMALE_FUNNY_2, getString(R.string.female_fun_2)),
+            )
         }
-        var selectedOption = -1
-        val soundType = SoundType.values()[HelpFunctions.shared.getSoundType(this.context!!)]
-        selectedOption = soundType.value
-        adb.setSingleChoiceItems(items, selectedOption) { _: DialogInterface?, which: Int -> selectedOption = which }
+        var selectedOption: Int
+        val soundType = SoundType.entries.getOrElse(
+            HelpFunctions.shared.getSoundType(this.requireContext()),
+            { SoundType.MALE_NORMAL })
+        selectedOption = items.firstOrNull { it.first == soundType }?.let { items.indexOf(it) } ?: 0
+        adb.setSingleChoiceItems(
+            items.map { it.second }.toTypedArray(),
+            selectedOption
+        ) { _: DialogInterface?, which: Int -> selectedOption = which }
         adb.setPositiveButton(getString(R.string.save)) { _: DialogInterface?, _: Int ->
-            if (selectedOption == SoundType.CUSTOM.value) {
-                listener?.onCustomSoundPicker()
-                dismiss()
-            } else {
-                HelpFunctions.shared.setSoundType(this.context!!, selectedOption)
-                updateTexts()
-            }
+            HelpFunctions.shared.setSoundType(
+                this.requireContext(),
+                items[selectedOption].first
+            )
+            updateTexts()
         }
         adb.setNegativeButton(getString(R.string.cancel), null)
         adb.setTitle(getString(R.string.select_sound))
         adb.show()
     }
-
-    interface OnInteractionListener {
-        fun onCustomSoundPicker()
-    }
-
-    var listener: OnInteractionListener? = null
 }

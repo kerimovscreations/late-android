@@ -7,5 +7,5 @@ enum class SoundType(val value: Int) {
     FEMALE_FUNNY_1(3),
     MALE_FUNNY_2(4),
     FEMALE_FUNNY_2(5),
-    CUSTOM(6)
+//    CUSTOM(6)
 }
